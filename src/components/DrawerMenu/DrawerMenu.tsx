@@ -22,7 +22,7 @@ const DrawerMenu: React.FC<DrawerMenuProp> = ({ open, handleDrawerClose }) => {
    const theme = useTheme();
    const classes = useStyles(theme);
    return (
-      <div>
+      <>
          <Drawer
             variant="permanent"
             classes={{
@@ -50,10 +50,9 @@ const DrawerMenu: React.FC<DrawerMenuProp> = ({ open, handleDrawerClose }) => {
                   );
                })}
             </List>
-            {/* <Divider />
-            <List>{secondaryListItems}</List> */}
+            <Divider />
          </Drawer>
-      </div>
+      </>
    );
 };
 

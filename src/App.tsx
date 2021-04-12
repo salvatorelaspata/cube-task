@@ -1,6 +1,6 @@
 import { Container, CssBaseline, Grid, Paper, Switch } from "@material-ui/core";
 
-import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import { ThemeProvider } from "@material-ui/core/styles";
 
 import clsx from "clsx";
 import React, { useState } from "react";
@@ -9,10 +9,11 @@ import DrawerMenu from "./components/DrawerMenu/DrawerMenu";
 import { useStyles } from "./components/DrawerMenu/useStyles";
 
 import { useDarkMode } from "./components/Bar/useDarkMode";
+import Figata from './components/Figata/Figata';
 const App: React.FC = () => {
    const classes = useStyles();
 
-   const { darkState, darkTheme, handleThemeChange } = useDarkMode();
+   const { darkState, darkTheme, handleThemeChange } = useDarkMode(true);
 
    const [open, setOpen] = useState<boolean>(false);
 
@@ -22,9 +23,10 @@ const App: React.FC = () => {
    const handleDrawerClose: () => void = () => {
       setOpen(false);
    };
-   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+   const fixedHeightPaper = clsx(classes.paper);
 
    return (
+
       <div className={classes.root}>
          <ThemeProvider theme={darkTheme}>
             <CssBaseline />
@@ -43,6 +45,7 @@ const App: React.FC = () => {
                      <Grid item xs={12} md={8} lg={9}>
                         <Paper className={fixedHeightPaper}>
                            Chart
+                          <Figata />
                            {/* <Chart /> */}
                         </Paper>
                      </Grid>

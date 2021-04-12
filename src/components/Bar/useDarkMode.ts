@@ -1,9 +1,9 @@
-import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import { createMuiTheme } from "@material-ui/core/styles";
 import { useState } from "react";
 import { lightBlue, red, indigo, amber } from "@material-ui/core/colors";
 
-export function useDarkMode() {
-   const [darkState, setDarkState] = useState(false);
+export function useDarkMode(initialValue: boolean) {
+   const [darkState, setDarkState] = useState(initialValue);
 
    const palletType = darkState ? "dark" : "light";
    const mainPrimaryColor = darkState ? indigo[500] : lightBlue[500];

@@ -1,24 +1,26 @@
-import { createMuiTheme } from "@material-ui/core/styles";
 import { useState } from "react";
-import { lightBlue, red, indigo, amber } from "@material-ui/core/colors";
+import { createMuiTheme } from "@material-ui/core/styles";
+import { BG_DARK, BG_LIGHT, PAPER_DARK, PAPER_LIGHT, PRIMARY_DARK, PRIMARY_LIGTH, SECONDARY_DARK, SECONDARY_LIGHT } from '../../config/constants';
 
 export function useDarkMode(initialValue: boolean) {
    const [darkState, setDarkState] = useState(initialValue);
 
-   const palletType = darkState ? "dark" : "light";
-   const mainPrimaryColor = darkState ? indigo[500] : lightBlue[500];
-   const mainSecondaryColor = darkState ? amber[900] : red[500];
    const darkTheme = createMuiTheme({
       palette: {
-         type: palletType,
+         type: darkState ? "dark" : "light",
          primary: {
-            main: mainPrimaryColor,
+            main: darkState ? PRIMARY_DARK : PRIMARY_LIGTH,
          },
          secondary: {
-            main: mainSecondaryColor,
+            main: darkState ? SECONDARY_DARK : SECONDARY_LIGHT,
          },
+         background: {
+            paper: darkState ? PAPER_DARK : PAPER_LIGHT,
+            default: darkState ? BG_DARK : BG_LIGHT
+         }
       },
    });
+
    const handleThemeChange = () => {
       setDarkState(!darkState);
    };

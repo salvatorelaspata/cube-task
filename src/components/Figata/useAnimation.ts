@@ -1,6 +1,6 @@
 import React from 'react';
-export const useAnimation = ()=>{
-const cardRef = React.useRef() as React.MutableRefObject<HTMLInputElement>;
+export const useAnimation = () => {
+     const cardRef = React.useRef() as React.MutableRefObject<HTMLInputElement>;
      const sneakerRef = React.useRef() as React.MutableRefObject<HTMLInputElement>;
      const titleRef = React.useRef() as React.MutableRefObject<HTMLInputElement>;
      const descriptionRef = React.useRef() as React.MutableRefObject<HTMLInputElement>;
@@ -40,15 +40,15 @@ const cardRef = React.useRef() as React.MutableRefObject<HTMLInputElement>;
           purchaseRef.current.style.transform = "translateZ(0px)";
      };
 
-return {
-     cardRef,
-     sneakerRef,
-     titleRef,
-     descriptionRef,
-     sizesRef,
-     purchaseRef,
-     mousemove,
-     mouseenter,
-     mouseLeave
-}
+     return {
+          cardRef,
+          sneakerRef,
+          titleRef,
+          descriptionRef,
+          sizesRef,
+          purchaseRef,
+          mousemove,
+          mouseenter,
+          mouseLeave
+     }
 }

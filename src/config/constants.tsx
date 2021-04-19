@@ -1,13 +1,17 @@
+/**
+ * DRAWER MENU
+ */
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import PeopleIcon from "@material-ui/icons/People";
 import BarChartIcon from "@material-ui/icons/BarChart";
 import LayersIcon from "@material-ui/icons/Layers";
-
+import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck';
 interface ITEM_MENU_PROP {
    id: number;
    icon: JSX.Element;
    text: string;
+   to: string;
 }
 
 interface ITEMS_MENU_PROPS {
@@ -15,10 +19,23 @@ interface ITEMS_MENU_PROPS {
 }
 export const ITEMS_MENU: ITEMS_MENU_PROPS = {
    items: [
-      { id: 1, icon: <DashboardIcon />, text: "Dashboassssrd" },
-      { id: 2, icon: <ShoppingCartIcon />, text: "Orders" },
-      { id: 3, icon: <PeopleIcon />, text: "Customers" },
-      { id: 4, icon: <BarChartIcon />, text: "Reports" },
-      { id: 5, icon: <LayersIcon />, text: "Integrations" },
+      { id: 1, icon: <DashboardIcon />, text: "Dashboassssrd", to: "/" },
+      { id: 2, icon: <ShoppingCartIcon />, text: "Project", to: "/project" },
+      { id: 3, icon: <PeopleIcon />, text: "timesheet", to: "/timesheet" },
+      { id: 4, icon: <BarChartIcon />, text: "Reports", to: "/" },
+      { id: 5, icon: <LayersIcon />, text: "Integrations", to: "/" },
+      { id: 6, icon: <PlaylistAddCheckIcon />, text: "ToDo", to: "/todo" },
    ],
 };
+
+/**
+ * PALETTE COLORS
+ */
+export const PRIMARY_DARK = '#7DB3FF';
+export const PRIMARY_LIGTH = '#111827';
+export const SECONDARY_DARK = '#FFFFFF';
+export const SECONDARY_LIGHT = '#7DB3FF';
+export const PAPER_DARK = '#1F2937';
+export const PAPER_LIGHT = '#FFFFFF';
+export const BG_DARK = '#111827';
+export const BG_LIGHT = '#F3F6FD';

@@ -1,4 +1,4 @@
-import React, { CSSProperties, useEffect, useRef } from 'react'
+import React from 'react'
 import './figata.css'
 import { useAnimation } from './useAnimation'
 

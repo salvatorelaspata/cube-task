@@ -60,7 +60,7 @@ const Bar: React.FC<BarProp> = ({
             >
                _cube
             </Typography>
-            <Switch checked={darkState} onChange={handleThemeChange} />
+            <Switch color="secondary" checked={darkState} onChange={handleThemeChange} />
             <IconButton color="inherit">
                <Badge
                   badgeContent={notificationNumber || "?"}

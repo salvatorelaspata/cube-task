@@ -1,19 +1,51 @@
-import { Container, CssBaseline, Grid, Paper, Switch } from "@material-ui/core";
+import React, { useState } from "react";
+import {
+   BrowserRouter as Router,
+   Switch,
+   Route
+} from "react-router-dom";
 
+import { CssBaseline } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/core/styles";
 
-import clsx from "clsx";
-import React, { useState } from "react";
+import { useStyles } from "./components/DrawerMenu/useStyles";
+import { useDarkMode } from "./components/Bar/useDarkMode";
+
 import Bar from "./components/Bar/Bar";
 import DrawerMenu from "./components/DrawerMenu/DrawerMenu";
-import { useStyles } from "./components/DrawerMenu/useStyles";
 
-import { useDarkMode } from "./components/Bar/useDarkMode";
-import Figata from './components/Figata/Figata';
+import Project from './pages/Project';
+import Dashboard from './pages/Dashboard';
+import Timesheet from './pages/Timesheet';
+import ToDo from './pages/ToDo';
+
 const App: React.FC = () => {
-   const classes = useStyles();
 
+   const classes = useStyles();
    const { darkState, darkTheme, handleThemeChange } = useDarkMode(true);
+
+   const routes = [
+      {
+         id: 1,
+         path: "/",
+         component: <Dashboard darkState={darkState} handleThemeChange={handleThemeChange} />
+      },
+      {
+         id: 2,
+         path: "/project",
+         component: <Project />
+      },
+      {
+         id: 3,
+         path: "/timesheet",
+         component: <Timesheet />
+      },
+      {
+         id: 4,
+         path: "/todo",
+         component: <ToDo />
+      }
+   ];
 
    const [open, setOpen] = useState<boolean>(false);
 
@@ -23,7 +55,6 @@ const App: React.FC = () => {
    const handleDrawerClose: () => void = () => {
       setOpen(false);
    };
-   const fixedHeightPaper = clsx(classes.paper);
 
    return (
 
@@ -36,43 +67,25 @@ const App: React.FC = () => {
                darkState={darkState}
                handleThemeChange={handleThemeChange}
             />
-            <DrawerMenu open={open} handleDrawerClose={handleDrawerClose} />
-            <main className={classes.content}>
-               <div className={classes.appBarSpacer} />
-               <Container maxWidth="lg" className={classes.container}>
-                  <Grid container spacing={3}>
-                     {/* Chart */}
-                     <Grid item xs={12} md={8} lg={9}>
-                        <Paper className={fixedHeightPaper}>
-                           Chart
-                          <Figata />
-                           {/* <Chart /> */}
-                        </Paper>
-                     </Grid>
-                     {/* Recent Deposits */}
-                     <Grid item xs={12} md={4} lg={3}>
-                        <Paper className={fixedHeightPaper}>
-                           Deposits
-                           {/* <Deposits /> */}
-                        </Paper>
-                     </Grid>
-                     {/* Recent Orders */}
-                     <Grid item xs={12}>
-                        <Paper className={classes.paper}>
-                           Orders
-                           <Switch
-                              checked={darkState}
-                              onChange={handleThemeChange}
-                           />
-                           {/* <Orders /> */}
-                        </Paper>
-                     </Grid>
-                  </Grid>
-                  {/* <Box pt={4}>
-                  <Copyright />
-               </Box> */}
-               </Container>
-            </main>
+            <Router>
+               <DrawerMenu open={open} handleDrawerClose={handleDrawerClose} />
+
+               <main className={classes.content}>
+                  <div className={classes.appBarSpacer} />
+                  {/* ROUTING */}
+                  <Switch >
+                     {routes.map((route) => (
+                        <Route
+                           key={route.id}
+                           exact path={route.path}
+                        >
+                           {route.component}
+                        </Route>
+                     ))}
+                  </Switch>
+
+               </main>
+            </Router>
          </ThemeProvider>
       </div>
    );

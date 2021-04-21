@@ -7,6 +7,9 @@ import PeopleIcon from "@material-ui/icons/People";
 import BarChartIcon from "@material-ui/icons/BarChart";
 import LayersIcon from "@material-ui/icons/Layers";
 import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck';
+import Dashboard from '../pages/Dashboard';
+import Project from '../pages/Project';
+import Timesheet from '../pages/Timesheet';
 interface ITEM_MENU_PROP {
    id: number;
    icon: JSX.Element;
@@ -27,6 +30,40 @@ export const ITEMS_MENU: ITEMS_MENU_PROPS = {
       { id: 6, icon: <PlaylistAddCheckIcon />, text: "ToDo", to: "/todo" },
    ],
 };
+
+
+export const routes = (darkState: boolean, handleThemeChange: () => void) => [
+   {
+      id: 1,
+      icon: <DashboardIcon />,
+      text: "Dashboassssrd",
+      path: "/",
+      component: <Dashboard darkState={darkState} handleThemeChange={handleThemeChange} />
+   },
+   {
+      id: 2,
+      path: "/project", icon: <ShoppingCartIcon />, text: "Project",
+      component: <Project />
+   },
+   {
+      id: 3,
+      path: "/timesheet",
+      icon: <PeopleIcon />, text: "Timesheet",
+      component: <Timesheet />
+   },
+   {
+      id: 4,
+      path: "/",
+      icon: <BarChartIcon />, text: "Reports",
+      component: <Dashboard darkState={darkState} handleThemeChange={handleThemeChange} />
+   },
+   {
+      id: 5,
+      path: "/",
+      icon: <LayersIcon />, text: "Integrations",
+      component: <Dashboard darkState={darkState} handleThemeChange={handleThemeChange} />
+   }
+]
 
 /**
  * PALETTE COLORS

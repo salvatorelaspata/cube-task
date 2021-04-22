@@ -83,7 +83,7 @@ export const useStyles = makeStyles((theme) => ({
       display: "none",
    },
    fabMargin: {
-      position: 'absolute',
+      position: "absolute",
       bottom: theme.spacing(5),
       right: theme.spacing(5),
    },

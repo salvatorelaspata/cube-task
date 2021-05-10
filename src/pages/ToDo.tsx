@@ -12,11 +12,11 @@ interface ListInterface {
 }
 
 interface Lists {
-   todo: ListInterface[];
-   inProgress: ListInterface[];
-   completed: ListInterface[];
-   suspend: ListInterface[];
-   deleted: ListInterface[];
+   todo: { id: number, title: string, list: ListInterface[] };
+   inProgress: { id: number, title: string, list: ListInterface[] };
+   completed: { id: number, title: string, list: ListInterface[] };
+   suspend: { id: number, title: string, list: ListInterface[] };
+   deleted: { id: number, title: string, list: ListInterface[] };
 }
 
 const ToDo: React.FC = () => {
@@ -25,56 +25,66 @@ const ToDo: React.FC = () => {
    const [isDnd, setIsDnd] = useState<boolean>(true);
 
    const [lists, setLists] = useState<Lists>({
-      todo: [
-         { id: 1, text: "text 1" },
-         { id: 2, text: "text 2" },
-         { id: 3, text: "text 3" },
-         { id: 4, text: "text 4" },
-         { id: 5, text: "text 5" },
-         { id: 6, text: "text 6" },
-         { id: 7, text: "text 7" },
-         { id: 8, text: "text 8" },
-      ],
-      inProgress: [
-         { id: 11, text: "text 11" },
-         { id: 22, text: "text 22" },
-         { id: 33, text: "text 33" },
-         { id: 44, text: "text 44" },
-         { id: 55, text: "text 55" },
-         { id: 66, text: "text 66" },
-         { id: 77, text: "text 77" },
-         { id: 88, text: "text 88" },
-      ],
-      completed: [
-         { id: 111, text: "text 111" },
-         { id: 222, text: "text 222" },
-         { id: 333, text: "text 333" },
-         { id: 444, text: "text 444" },
-         { id: 555, text: "text 555" },
-         { id: 666, text: "text 666" },
-         { id: 777, text: "text 777" },
-         { id: 899, text: "text 888" },
-      ],
-      suspend: [
-         { id: 1111, text: "text 1111" },
-         { id: 2222, text: "text 2222" },
-         { id: 3333, text: "text 3333" },
-         { id: 4444, text: "text 4444" },
-         { id: 5555, text: "text 5555" },
-         { id: 6666, text: "text 6666" },
-         { id: 7777, text: "text 7777" },
-         { id: 8888, text: "text 8888" },
-      ],
-      deleted: [
-         { id: 11111, text: "text 11111" },
-         { id: 22222, text: "text 22222" },
-         { id: 33333, text: "text 33333" },
-         { id: 44444, text: "text 44444" },
-         { id: 55555, text: "text 55555" },
-         { id: 66666, text: "text 66666" },
-         { id: 77777, text: "text 77777" },
-         { id: 88888, text: "text 88888" },
-      ],
+      todo: {
+         id: 1, title: 'ToDo', list: [
+            { id: 1, text: "text 1" },
+            { id: 2, text: "text 2" },
+            { id: 3, text: "text 3" },
+            { id: 4, text: "text 4" },
+            { id: 5, text: "text 5" },
+            { id: 6, text: "text 6" },
+            { id: 7, text: "text 7" },
+            { id: 8, text: "text 8" },
+         ]
+      },
+      inProgress: {
+         id: 2, title: 'In Progress', list: [
+            { id: 11, text: "text 11" },
+            { id: 22, text: "text 22" },
+            { id: 33, text: "text 33" },
+            { id: 44, text: "text 44" },
+            { id: 55, text: "text 55" },
+            { id: 66, text: "text 66" },
+            { id: 77, text: "text 77" },
+            { id: 88, text: "text 88" },
+         ]
+      },
+      completed: {
+         id: 3, title: 'Completed', list: [
+            { id: 111, text: "text 111" },
+            { id: 222, text: "text 222" },
+            { id: 333, text: "text 333" },
+            { id: 444, text: "text 444" },
+            { id: 555, text: "text 555" },
+            { id: 666, text: "text 666" },
+            { id: 777, text: "text 777" },
+            { id: 899, text: "text 888" },
+         ]
+      },
+      suspend: {
+         id: 4, title: 'Suspend', list: [
+            { id: 1111, text: "text 1111" },
+            { id: 2222, text: "text 2222" },
+            { id: 3333, text: "text 3333" },
+            { id: 4444, text: "text 4444" },
+            { id: 5555, text: "text 5555" },
+            { id: 6666, text: "text 6666" },
+            { id: 7777, text: "text 7777" },
+            { id: 8888, text: "text 8888" },
+         ]
+      },
+      deleted: {
+         id: 5, title: 'Deleted', list: [
+            { id: 11111, text: "text 11111" },
+            { id: 22222, text: "text 22222" },
+            { id: 33333, text: "text 33333" },
+            { id: 44444, text: "text 44444" },
+            { id: 55555, text: "text 55555" },
+            { id: 66666, text: "text 66666" },
+            { id: 77777, text: "text 77777" },
+            { id: 88888, text: "text 88888" },
+         ]
+      },
    });
 
    const onChangeView = () => {
@@ -132,153 +142,50 @@ const ToDo: React.FC = () => {
                      }}
                   >
                      <DragDropContext onDragEnd={onDragEnd}>
-                        {/* {Object.keys((k, index) => { */}
-                        <Droppable droppableId="droppableId">
-                           {(provided, snapshot) => (
-                              <div
-                                 ref={provided.innerRef}
-                                 style={getListStyle(snapshot.isDraggingOver)}
-                              >
-                                 <h2>PRESA IN C</h2>
-                                 {/* LOOP ITEMS */}
-                                 {[1, 2, 3, 4, 5, 6].map((e, i) => {
-                                    return (
-                                       <Draggable
-                                          key={e}
-                                          draggableId={e.toString()}
-                                          index={i}
-                                       >
-                                          {(provided, snapshot) => (
-                                             <div
-                                                ref={provided.innerRef}
-                                                {...provided.draggableProps}
-                                                {...provided.dragHandleProps}
-                                                style={getItemStyle(
-                                                   snapshot.isDragging,
-                                                   provided.draggableProps.style
-                                                )}
+                        {Object.entries(lists).map((entry) => {
+                           const [key, obj] = entry;
+                           const { title, list } = obj;
+
+                           return (
+                              <Droppable droppableId={key}>
+                                 {(provided, snapshot) => (
+                                    <div
+                                       ref={provided.innerRef}
+                                       style={getListStyle(snapshot.isDraggingOver)}
+                                    >
+                                       <h2>{title}</h2>
+                                       {/* LOOP ITEMS */}
+                                       {list.map((e: { id: number, text: string }, i: number) => {
+                                          return (
+                                             <Draggable
+                                                key={e.id}
+                                                draggableId={e.text}
+                                                index={i}
                                              >
-                                                {e.toString()}
-                                             </div>
-                                          )}
-                                       </Draggable>
-                                    );
-                                 })}
-
-                                 {provided.placeholder}
-                              </div>
-                           )}
-                        </Droppable>
-
-                        <Droppable droppableId="droppableId">
-                           {(provided, snapshot) => (
-                              <div
-                                 ref={provided.innerRef}
-                                 style={getListStyle(snapshot.isDraggingOver)}
-                              >
-                                 <h2>PRESA IN C</h2>
-                                 {/* LOOP ITEMS */}
-                                 {[11, 22, 33, 44, 55, 66, 77].map((e, i) => {
-                                    return (
-                                       <Draggable
-                                          key={e}
-                                          draggableId={e.toString()}
-                                          index={i}
-                                       >
-                                          {(provided, snapshot) => (
-                                             <div
-                                                ref={provided.innerRef}
-                                                {...provided.draggableProps}
-                                                {...provided.dragHandleProps}
-                                                style={getItemStyle(
-                                                   snapshot.isDragging,
-                                                   provided.draggableProps.style
+                                                {(provided, snapshot) => (
+                                                   <div
+                                                      ref={provided.innerRef}
+                                                      {...provided.draggableProps}
+                                                      {...provided.dragHandleProps}
+                                                      style={getItemStyle(
+                                                         snapshot.isDragging,
+                                                         provided.draggableProps.style
+                                                      )}
+                                                   >
+                                                      {e.text}
+                                                   </div>
                                                 )}
-                                             >
-                                                {e.toString()}
-                                             </div>
-                                          )}
-                                       </Draggable>
-                                    );
-                                 })}
+                                             </Draggable>
+                                          );
+                                       })}
 
-                                 {provided.placeholder}
-                              </div>
-                           )}
-                        </Droppable>
-                        <Droppable droppableId="droppableId2">
-                           {(provided, snapshot) => (
-                              <div
-                                 ref={provided.innerRef}
-                                 style={getListStyle(snapshot.isDraggingOver)}
-                              >
-                                 <h2>C SEMU</h2>
-                                 {/* LOOP ITEMS */}
-                                 {[11, 22, 33, 44, 55].map((e, i) => {
-                                    return (
-                                       <Draggable
-                                          key={e}
-                                          draggableId={e.toString()}
-                                          index={i}
-                                       >
-                                          {(provided, snapshot) => (
-                                             <div
-                                                ref={provided.innerRef}
-                                                {...provided.draggableProps}
-                                                {...provided.dragHandleProps}
-                                                style={getItemStyle(
-                                                   snapshot.isDragging,
-                                                   provided.draggableProps.style
-                                                )}
-                                             >
-                                                {e.toString()}
-                                             </div>
-                                          )}
-                                       </Draggable>
-                                    );
-                                 })}
+                                       {provided.placeholder}
+                                    </div>
+                                 )}
+                              </Droppable>
+                           )
+                        })}
 
-                                 {provided.placeholder}
-                              </div>
-                           )}
-                        </Droppable>
-
-                        <Droppable droppableId="droppableId3">
-                           {(provided, snapshot) => (
-                              <div
-                                 ref={provided.innerRef}
-                                 style={getListStyle(snapshot.isDraggingOver)}
-                              >
-                                 <h2>ENNAMO</h2>
-                                 {/* LOOP ITEMS */}
-                                 {[111, 222, 333, 444, 555].map((e, i) => {
-                                    return (
-                                       <Draggable
-                                          key={e}
-                                          draggableId={e.toString()}
-                                          index={i}
-                                       >
-                                          {(provided, snapshot) => (
-                                             <div
-                                                ref={provided.innerRef}
-                                                {...provided.draggableProps}
-                                                {...provided.dragHandleProps}
-                                                style={getItemStyle(
-                                                   snapshot.isDragging,
-                                                   provided.draggableProps.style
-                                                )}
-                                             >
-                                                {e.toString()}
-                                             </div>
-                                          )}
-                                       </Draggable>
-                                    );
-                                 })}
-
-                                 {provided.placeholder}
-                              </div>
-                           )}
-                        </Droppable>
                      </DragDropContext>
                   </div>
                ) : (

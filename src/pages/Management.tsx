@@ -1,18 +1,18 @@
-import { Fab, Grid, Paper } from "@material-ui/core";
-import AddIcon from "@material-ui/icons/Add";
+import { Button, Fab, Grid, Paper } from "@material-ui/core";
 import clsx from "clsx";
-import React from "react";
+import React, { useRef } from "react";
 import { useStyles } from "../components/hook/useStyles";
 import StandardContainer from "../components/layout/StandardContainer";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import Customers from "../components/customers/Customers";
 import Project from "../components/project/Project";
-
+import AddIcon from '@material-ui/icons/Add';
 //si andranno a gestire tutti i flussi di anagrafica
-const Management: React.FC = () => {
-   const classes = useStyles();
+const Management = () => {
+   const domRef = useRef(null);
    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+   const classes = useStyles();
 
    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
       setAnchorEl(event.currentTarget);
@@ -24,14 +24,30 @@ const Management: React.FC = () => {
    return (
       <>
          <StandardContainer>
-            <Grid item xs={12} md={8} lg={8}>
+            <Grid item xs={12} md={6} lg={6}>
                <Paper className={clsx(classes.paper)}>
                   customers
+                  <div>
+                     <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
+                        Open Menu
+                  </Button>
+                     <Menu
+                        id="simple-menu"
+                        anchorEl={anchorEl}
+                        keepMounted
+                        open={Boolean(anchorEl)}
+                        onClose={handleClose}
+                     >
+                        <MenuItem onClick={handleClose}>Profile</MenuItem>
+                        <MenuItem onClick={handleClose}>My account</MenuItem>
+                        <MenuItem onClick={handleClose}>Logout</MenuItem>
+                     </Menu>
+                  </div>
                   <Customers />
                </Paper>
             </Grid>
 
-            <Grid item xs={12} md={4} lg={4}>
+            <Grid item xs={12} md={6} lg={6}>
                <Paper className={clsx(classes.paper)}>
                   project
                   <Project />
@@ -43,24 +59,41 @@ const Management: React.FC = () => {
          </StandardContainer>
          <Fab
             size="medium"
-            color="secondary"
+            color="primary"
             aria-label="Add Management"
             className={classes.fabMargin}
             onClick={handleClick}
-            //gestire menù per selezionare la tipologia di inserimento ( commessa(admin), progetto(team leader), attività, task )
+         //gestire menù per selezionare la tipologia di inserimento ( commessa(admin), progetto(team leader), attività, task )
          >
             <AddIcon />
          </Fab>
-         <Menu
-            anchorEl={anchorEl}
-            keepMounted
-            open={Boolean(anchorEl)}
-            onClose={handleClose}
-         >
-            <MenuItem onClick={handleClose}>customer</MenuItem>
-            <MenuItem onClick={handleClose}>project</MenuItem>
-            <MenuItem onClick={handleClose}>activity</MenuItem>
-         </Menu>
+         <div ref={domRef}>
+            <Menu
+               anchorEl={anchorEl}
+               keepMounted
+               open={Boolean(anchorEl)}
+               onClose={handleClose}
+            >
+               <MenuItem onClick={handleClose}>
+                  <div>
+                     <AddIcon color="primary" />
+                  customer
+               </div>
+               </MenuItem>
+               <MenuItem onClick={handleClose}>
+                  <div>
+                     <AddIcon color="primary" />
+                  project
+               </div>
+               </MenuItem>
+               <MenuItem onClick={handleClose}>
+                  <div>
+                     <AddIcon color="primary" />
+                  activity
+               </div>
+               </MenuItem>
+            </Menu>
+         </div>
       </>
    );
 };

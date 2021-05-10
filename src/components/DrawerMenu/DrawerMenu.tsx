@@ -33,7 +33,7 @@ const DrawerMenu: React.FC<DrawerMenuProp> = ({ open, handleDrawerClose }) => {
             <Divider />
 
             <List>
-               {ITEMS_MENU(false, () => {}).map((item) => {
+               {ITEMS_MENU(false, () => { }).map((item) => {
                   return (
                      <ListItemLink
                         to={item.path}
@@ -41,15 +41,6 @@ const DrawerMenu: React.FC<DrawerMenuProp> = ({ open, handleDrawerClose }) => {
                         icon={item.icon}
                         key={item.id}
                      />
-                     // <Link to={item.path} key={item.id}>
-                     //    <ListItem
-                     //       button
-                     //       selected={item.path === location.pathname}
-                     //    >
-                     //       <ListItemIcon>{item.icon}</ListItemIcon>
-                     //       <ListItemText primary={item.text} />
-                     //    </ListItem>
-                     // </Link>
                   );
                })}
             </List>

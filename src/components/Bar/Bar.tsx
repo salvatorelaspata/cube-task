@@ -14,7 +14,7 @@ import {
    useTheme,
    Switch,
 } from "@material-ui/core";
-import { useStyles } from "../DrawerMenu/useStyles";
+import { useStyles } from "../hook/useStyles";
 
 interface BarProp {
    open: boolean;
@@ -58,9 +58,13 @@ const Bar: React.FC<BarProp> = ({
                noWrap
                className={classes.title}
             >
-               _cube
+               _
             </Typography>
-            <Switch color="secondary" checked={darkState} onChange={handleThemeChange} />
+            <Switch
+               color="secondary"
+               checked={darkState}
+               onChange={handleThemeChange}
+            />
             <IconButton color="inherit">
                <Badge
                   badgeContent={notificationNumber || "?"}

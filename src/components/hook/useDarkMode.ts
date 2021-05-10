@@ -1,6 +1,15 @@
 import { useState } from "react";
 import { createMuiTheme } from "@material-ui/core/styles";
-import { BG_DARK, BG_LIGHT, PAPER_DARK, PAPER_LIGHT, PRIMARY_DARK, PRIMARY_LIGTH, SECONDARY_DARK, SECONDARY_LIGHT } from '../../config/constants';
+import {
+   BG_DARK,
+   BG_LIGHT,
+   PAPER_DARK,
+   PAPER_LIGHT,
+   PRIMARY_DARK,
+   PRIMARY_LIGTH,
+   SECONDARY_DARK,
+   SECONDARY_LIGHT,
+} from "../../config/constants";
 
 export function useDarkMode(initialValue: boolean) {
    const [darkState, setDarkState] = useState(initialValue);
@@ -16,8 +25,8 @@ export function useDarkMode(initialValue: boolean) {
          },
          background: {
             paper: darkState ? PAPER_DARK : PAPER_LIGHT,
-            default: darkState ? BG_DARK : BG_LIGHT
-         }
+            default: darkState ? BG_DARK : BG_LIGHT,
+         },
       },
    });
 

@@ -1,5 +1,5 @@
 import DashboardIcon from "@material-ui/icons/Dashboard";
-import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
+import AccountTreeIcon from "@material-ui/icons/AccountTree";
 import PeopleIcon from "@material-ui/icons/People";
 import BarChartIcon from "@material-ui/icons/BarChart";
 import LayersIcon from "@material-ui/icons/Layers";
@@ -7,7 +7,7 @@ import PlaylistAddCheckIcon from "@material-ui/icons/PlaylistAddCheck";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 
 import Dashboard from "../pages/Dashboard";
-import Project from "../pages/Project";
+import Management from "../pages/Management";
 import Timesheet from "../pages/Timesheet";
 import ToDo from "../pages/ToDo";
 import Drive from "../pages/Drive";
@@ -30,10 +30,10 @@ export const ITEMS_MENU = (
    },
    {
       id: 2,
-      path: "/project",
-      icon: <ShoppingCartIcon />,
-      text: "Project",
-      component: <Project />,
+      path: "/Mananagement",
+      icon: <AccountTreeIcon />,
+      text: "Management",
+      component: <Management />,
    },
    {
       id: 3,
@@ -90,6 +90,6 @@ export const PRIMARY_LIGTH = "#111827";
 export const SECONDARY_DARK = "#FFFFFF";
 export const SECONDARY_LIGHT = "#7DB3FF";
 export const PAPER_DARK = "#1F2937";
-export const PAPER_LIGHT = "#FFFFFF";
+export const PAPER_LIGHT = "#ececec";
 export const BG_DARK = "#111827";
 export const BG_LIGHT = "#F3F6FD";

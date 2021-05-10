@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { Divider, Drawer, IconButton, List, useTheme } from "@material-ui/core";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import { useStyles } from "./useStyles";
+import { useStyles } from "../hook/useStyles";
 import { ITEMS_MENU } from "../../config/constants";
 import ListItemLink from "./ListItemLink";
 

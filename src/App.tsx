@@ -1,42 +1,42 @@
-import React, { useState } from "react";
+import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import { CssBaseline } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/core/styles";
 
-import { useStyles } from "./components/DrawerMenu/useStyles";
-import { useDarkMode } from "./components/Bar/useDarkMode";
+import { useStyles } from "./components/hook/useStyles";
+import { useDarkMode } from "./components/hook/useDarkMode";
 
 import Bar from "./components/Bar/Bar";
 import DrawerMenu from "./components/DrawerMenu/DrawerMenu";
 
 import { ITEMS_MENU } from "./config/constants";
+import { useDrawer } from "./components/hook/useDrawer";
 
 const App: React.FC = () => {
    const classes = useStyles();
    const { darkState, darkTheme, handleThemeChange } = useDarkMode(true);
-
-   const [open, setOpen] = useState<boolean>(false);
-
-   const handleDrawerOpen: () => void = () => {
-      setOpen(true);
-   };
-   const handleDrawerClose: () => void = () => {
-      setOpen(false);
-   };
+   const {
+      open: isOpenDrawer,
+      handleDrawerOpen,
+      handleDrawerClose,
+   } = useDrawer(false);
 
    return (
       <div className={classes.root}>
          <ThemeProvider theme={darkTheme}>
             <CssBaseline />
             <Bar
-               open={open}
+               open={isOpenDrawer}
                handleDrawerOpen={handleDrawerOpen}
                darkState={darkState}
                handleThemeChange={handleThemeChange}
             />
             <Router>
-               <DrawerMenu open={open} handleDrawerClose={handleDrawerClose} />
+               <DrawerMenu
+                  open={isOpenDrawer}
+                  handleDrawerClose={handleDrawerClose}
+               />
 
                <main className={classes.content}>
                   <div className={classes.appBarSpacer} />

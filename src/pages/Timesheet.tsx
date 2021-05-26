@@ -11,9 +11,9 @@ import StandardContainer from "../components/layout/StandardContainer";
 import { useBigCalendar } from '../components/hook/useBigCalendar';
 
 const Timesheet: React.FC = () => {
-    const classes = useStyles();
     const { localizer, moveEvent } = useBigCalendar();
     const DnDCalendar = withDragAndDrop<any, object>(Calendar as ComponentType<CalendarProps<any, object>>)
+    const classes = useStyles();
     const onEventDrop = (data: any) => {
         console.log(data);
     };
@@ -21,6 +21,7 @@ const Timesheet: React.FC = () => {
     const myEventsList: any[] = [
         { start: new Date(), end: new Date(), title: "special event" }
     ];
+
     return (
         // <StandardContainer>
         //     <Grid item xs={12} md={12} lg={12}>
@@ -40,7 +41,7 @@ const Timesheet: React.FC = () => {
             popup={true}
             startAccessor="start"
             endAccessor="end"
-            style={{ height: 600 }}
+            style={{ height: '90vh', padding: 10 }}
         />
         //         </Paper >
         //     </Grid >

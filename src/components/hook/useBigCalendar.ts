@@ -94,6 +94,7 @@ export const useBigCalendar = () => {
     }
     return {
         localizer,
+        events,
         handleDragStart,
         dragFromOutsideItem,
         onDropFromOutside,

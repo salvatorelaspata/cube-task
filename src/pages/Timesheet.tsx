@@ -5,7 +5,7 @@ import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import moment from 'moment';
 import clsx from "clsx";
-import React, { useState, ComponentType } from "react";
+import React, { useState, ComponentType, useEffect } from "react";
 import { useStyles } from "../components/hook/useStyles";
 import StandardContainer from "../components/layout/StandardContainer";
 import { useBigCalendar } from '../components/hook/useBigCalendar';
@@ -18,34 +18,63 @@ const Timesheet: React.FC = () => {
     const [open, setOpen] = useState<boolean>(false);
 
     const [info, setInfo] = useState<string>("");
+    const [event, setEvent] = useState<string>("");
+    const [ore, setOre] = useState<string>("");
     const DnDCalendar = withDragAndDrop<any, object>(Calendar as ComponentType<CalendarProps<any, object>>)
     const classes = useStyles();
-
-
 
     const onEventDrop = (data: any) => {
         console.log(data);
     };
 
     const slotClick = (slotInfo: any) => {
-        let data = slotInfo.start.toLocaleString();
+        let data = slotInfo.start;
         setShow(true);
         setOpen(true)
         setInfo(data);
     }
 
-    const myEventsList: any[] = [
-        {
-            start: new Date(), end: new Date(), title: "special event", ore_selzionate: "8"
+    const [myEventsList, setmyEventsList] = useState<any>([])
+    useEffect(() => {
+        let arr = [{
+            start: new Date(), end: new Date(), title: "special event 1"
         },
         {
-            start: new Date(), end: new Date(), title: "special event 2", ore_selzionate: "8"
+            start: new Date(), end: new Date(), title: "special event 2"
+        }]
+        setmyEventsList(arr)
+        return () => {
+
         }
-    ];
+    }, [])
+
+    const saveEvent = () => {
+        let obj: any = {
+            start: info, end: info, title: event + " " + "" + ore + " " + "ora/e lavorate",
+        }
+        let arr: any = [...myEventsList, obj];
+
+        setmyEventsList(arr);
+        setShow(false);
+        setOpen(false);
+        setInfo("");
+        setOre("");
+        setEvent("");
+    }
+
 
     return (
         <>
-            {show ? <FormDialog title="Aggiungi Evento" data={info} open={open} stato={setOpen} /> : null}
+            {show ? <FormDialog title="Aggiungi Evento"
+                data={info}
+                open={open}
+                stato={setOpen}
+                select={event}
+                setSelect={setEvent}
+                ore={ore}
+                setOre={setOre}
+                saveEvent={saveEvent}
+            /> : null}
             <DnDCalendar
                 defaultDate={moment().toDate()}
                 onEventDrop={moveEvent}

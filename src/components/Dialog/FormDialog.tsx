@@ -16,18 +16,29 @@ interface FormProps {
     title?: string,
     data: string,
     stato: any,
-    open: boolean
+    open: boolean,
+    select: string,
+    setSelect: any,
+    ore: string,
+    setOre: any,
+    saveEvent: any
 }
 
-const FormDialog: React.FC<FormProps> = ({ title, data, open, stato }) => {
+const FormDialog: React.FC<FormProps> = ({ title, data, open, stato, select, setSelect, ore, setOre, saveEvent }) => {
 
+    let data_string = data.toLocaleString();
     const classes = useStyles();
 
     const handleClose = () => {
         stato(false);
     };
     const handleChange = (e: any) => {
-        console.log(e.target.value);
+        let value: string = e.target.value;
+        setSelect(value)
+    }
+    const handleChangeOre = (e: any) => {
+        let value: string = e.target.value;
+        setOre(value);
     }
     return (
         <div>
@@ -35,24 +46,26 @@ const FormDialog: React.FC<FormProps> = ({ title, data, open, stato }) => {
                 <DialogTitle id="form-dialog-title" > {title} </DialogTitle>
                 < DialogContent >
                     <DialogContentText>
-                        Data selezionata:{data == undefined ? null : data}
+                        Data selezionata:{data_string == undefined ? null : data_string}
                     </DialogContentText>
                     <InputLabel id="demo-simple-select-label">Commessa:</InputLabel>
                     <Select
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
-                        value={''}
+                        value={select}
                         onChange={handleChange}
                         fullWidth
                     >
-                        <MenuItem value={10}>ERG</MenuItem>
-                        <MenuItem value={20}>Acea</MenuItem>
-                        <MenuItem value={30}>Superlind</MenuItem>
+                        <MenuItem value={"ERG"}>Erg</MenuItem>
+                        <MenuItem value={"ACEA"}>Acea</MenuItem>
+                        <MenuItem value={"SUPERLIND"}>Superlind</MenuItem>
                     </Select>
                     < TextField
                         autoFocus
                         margin="dense"
                         id="name"
+                        value={ore}
+                        onChange={handleChangeOre}
                         label="Enter hours:"
                         type="number"
                         fullWidth
@@ -62,8 +75,8 @@ const FormDialog: React.FC<FormProps> = ({ title, data, open, stato }) => {
                     <Button onClick={handleClose} color="primary" >
                         Chiudi
             </Button>
-                    < Button onClick={handleClose} color="primary" >
-                        Subscribe
+                    < Button onClick={saveEvent} color="primary" >
+                        Salva evento
                 </Button>
                 </DialogActions>
             </Dialog>

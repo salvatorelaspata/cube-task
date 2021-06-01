@@ -3,11 +3,11 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { Calendar, CalendarProps, momentLocalizer } from 'react-big-calendar';
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
+import "react-big-calendar/lib/css/react-big-calendar.css";
 import moment from 'moment';
 import clsx from "clsx";
 import React, { useState, ComponentType, useEffect } from "react";
 import { useStyles } from "../components/hook/useStyles";
-import StandardContainer from "../components/layout/StandardContainer";
 import { useBigCalendar } from '../components/hook/useBigCalendar';
 import FormDialog from "../components/Dialog/FormDialog";
 import { parseJsonSourceFileConfigFileContent } from "typescript";
@@ -23,9 +23,6 @@ const Timesheet: React.FC = () => {
     const DnDCalendar = withDragAndDrop<any, object>(Calendar as ComponentType<CalendarProps<any, object>>)
     const classes = useStyles();
 
-    const onEventDrop = (data: any) => {
-        console.log(data);
-    };
 
     const slotClick = (slotInfo: any) => {
         let data = slotInfo.start;
@@ -47,6 +44,17 @@ const Timesheet: React.FC = () => {
 
         }
     }, [])
+
+    const onEventDrop = (event: any) => {
+        const { start, end } = event
+        debugger
+        const idx = myEventsList.indexOf(event)
+        const updatedEvent = { ...event, start, end }
+        const nextEvents = [...myEventsList]
+        nextEvents.splice(idx, 1, updatedEvent)
+        setmyEventsList(nextEvents)
+        debugger
+    }
 
     const saveEvent = () => {
         let obj: any = {
@@ -77,7 +85,7 @@ const Timesheet: React.FC = () => {
             /> : null}
             <DnDCalendar
                 defaultDate={moment().toDate()}
-                onEventDrop={moveEvent}
+                onEventDrop={onEventDrop}
                 localizer={localizer}
                 events={myEventsList}
                 selectable={true}

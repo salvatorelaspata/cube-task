@@ -1,6 +1,5 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
-import { useStyles } from "../hook/useStyles";
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -10,7 +9,6 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import { type } from 'node:os';
 
 interface FormProps {
     title?: string,
@@ -27,7 +25,6 @@ interface FormProps {
 const FormDialog: React.FC<FormProps> = ({ title, data, open, stato, select, setSelect, ore, setOre, saveEvent }) => {
 
     let data_string = data.toLocaleString();
-    const classes = useStyles();
 
     const handleClose = () => {
         stato(false);
@@ -46,7 +43,7 @@ const FormDialog: React.FC<FormProps> = ({ title, data, open, stato, select, set
                 <DialogTitle id="form-dialog-title" > {title} </DialogTitle>
                 < DialogContent >
                     <DialogContentText>
-                        Data selezionata:{data_string == undefined ? null : data_string}
+                        Data selezionata:{!data_string ? null : data_string}
                     </DialogContentText>
                     <InputLabel id="demo-simple-select-label">Commessa:</InputLabel>
                     <Select

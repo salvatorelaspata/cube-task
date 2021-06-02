@@ -1,79 +1,34 @@
-import { Grid, Paper } from "@material-ui/core";
-import 'react-big-calendar/lib/css/react-big-calendar.css';
-import { Calendar, CalendarProps, momentLocalizer } from 'react-big-calendar';
-import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
-import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
-import "react-big-calendar/lib/css/react-big-calendar.css";
+import React, { ComponentType } from "react";
 import moment from 'moment';
-import clsx from "clsx";
-import React, { useState, ComponentType, useEffect } from "react";
-import { useStyles } from "../components/hook/useStyles";
+
+import { Calendar, CalendarProps } from 'react-big-calendar';
+import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import { useBigCalendar } from '../components/hook/useBigCalendar';
 import FormDialog from "../components/Dialog/FormDialog";
-import { parseJsonSourceFileConfigFileContent } from "typescript";
+
+import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
+import "react-big-calendar/lib/css/react-big-calendar.css";
 
 const Timesheet: React.FC = () => {
-    const { localizer, moveEvent } = useBigCalendar();
-    const [show, setShow] = useState<boolean>(false);
-    const [open, setOpen] = useState<boolean>(false);
-
-    const [info, setInfo] = useState<string>("");
-    const [event, setEvent] = useState<string>("");
-    const [ore, setOre] = useState<string>("");
+    const {
+        localizer,
+        events,
+        saveEvent,
+        onEventDrop,
+        slotClick,
+        info,
+        open,
+        ore,
+        event,
+        setOpen,
+        setOre,
+        setEvent
+    } = useBigCalendar();
     const DnDCalendar = withDragAndDrop<any, object>(Calendar as ComponentType<CalendarProps<any, object>>)
-    const classes = useStyles();
-
-
-    const slotClick = (slotInfo: any) => {
-        let data = slotInfo.start;
-        setShow(true);
-        setOpen(true)
-        setInfo(data);
-    }
-
-    const [myEventsList, setmyEventsList] = useState<any>([])
-    useEffect(() => {
-        let arr = [{
-            start: new Date(), end: new Date(), title: "special event 1"
-        },
-        {
-            start: new Date(), end: new Date(), title: "special event 2"
-        }]
-        setmyEventsList(arr)
-        return () => {
-
-        }
-    }, [])
-
-    const onEventDrop = (event: any) => {
-        const { start, end } = event
-        debugger
-        const idx = myEventsList.indexOf(event)
-        const updatedEvent = { ...event, start, end }
-        const nextEvents = [...myEventsList]
-        nextEvents.splice(idx, 1, updatedEvent)
-        setmyEventsList(nextEvents)
-        debugger
-    }
-
-    const saveEvent = () => {
-        let obj: any = {
-            start: info, end: info, title: event + " " + "" + ore + " " + "ora/e lavorate",
-        }
-        let arr: any = [...myEventsList, obj];
-
-        setmyEventsList(arr);
-        setShow(false);
-        setOpen(false);
-        setInfo("");
-        setOre("");
-        setEvent("");
-    }
-
 
     return (
         <>
-            {show ? <FormDialog title="Aggiungi Evento"
+            {open ? <FormDialog title="Aggiungi Evento"
                 data={info}
                 open={open}
                 stato={setOpen}
@@ -87,9 +42,9 @@ const Timesheet: React.FC = () => {
                 defaultDate={moment().toDate()}
                 onEventDrop={onEventDrop}
                 localizer={localizer}
-                events={myEventsList}
+                events={events}
                 selectable={true}
-                onSelectEvent={event => alert(event.title)}
+                // onSelectEvent={event => alert(event.title)}
                 onSelectSlot={slotClick}
                 popup={true}
                 startAccessor="start"

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -9,33 +9,38 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
+import { newEventProp } from '../hook/types';
 
 interface FormProps {
-    title?: string,
-    data: string,
-    stato: any,
+    title: string,
     open: boolean,
-    select: string,
-    setSelect: any,
-    ore: string,
-    setOre: any,
-    saveEvent: any
+    setOpen: Dispatch<SetStateAction<boolean>>,
+    saveEvent: () => void,
+    newEvent: newEventProp,
+    setNewEvent: Dispatch<SetStateAction<newEventProp>>
 }
 
-const FormDialog: React.FC<FormProps> = ({ title, data, open, stato, select, setSelect, ore, setOre, saveEvent }) => {
+const FormDialog: React.FC<FormProps> = ({
+    title,
+    open,
+    setOpen,
+    saveEvent,
+    newEvent,
+    setNewEvent,
+}) => {
 
-    let data_string = data.toLocaleString();
+    let data_string = newEvent.info.toLocaleString();
 
     const handleClose = () => {
-        stato(false);
+        setOpen(false);
     };
     const handleChange = (e: any) => {
         let value: string = e.target.value;
-        setSelect(value)
+        setNewEvent({ ...newEvent, event: value })
     }
     const handleChangeOre = (e: any) => {
         let value: string = e.target.value;
-        setOre(value);
+        setNewEvent({ ...newEvent, ore: value })
     }
     return (
         <div>
@@ -49,7 +54,7 @@ const FormDialog: React.FC<FormProps> = ({ title, data, open, stato, select, set
                     <Select
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
-                        value={select}
+                        value={newEvent.event}
                         onChange={handleChange}
                         fullWidth
                     >
@@ -61,7 +66,7 @@ const FormDialog: React.FC<FormProps> = ({ title, data, open, stato, select, set
                         autoFocus
                         margin="dense"
                         id="name"
-                        value={ore}
+                        value={newEvent.ore}
                         onChange={handleChangeOre}
                         label="Enter hours:"
                         type="number"
@@ -71,10 +76,10 @@ const FormDialog: React.FC<FormProps> = ({ title, data, open, stato, select, set
                 < DialogActions >
                     <Button onClick={handleClose} color="primary" >
                         Chiudi
-            </Button>
+                    </Button>
                     < Button onClick={saveEvent} color="primary" >
                         Salva evento
-                </Button>
+                    </Button>
                 </DialogActions>
             </Dialog>
         </div >

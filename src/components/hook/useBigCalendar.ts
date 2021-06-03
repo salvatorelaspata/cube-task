@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Event, momentLocalizer } from 'react-big-calendar'
 import moment from 'moment';
-import { newEventProp } from './types';
+import { newEventProp, eventDropProps } from './types';
 
 const initialNewEvent = {
     info: '',
@@ -9,7 +9,9 @@ const initialNewEvent = {
     ore: ''
 };
 
+
 export const useBigCalendar = () => {
+
     const [events, setEvents] = useState<Event[]>([])
     const [open, setOpen] = useState<boolean>(false);
     const [newEvent, setNewEvent] = useState<newEventProp>(initialNewEvent);
@@ -28,10 +30,11 @@ export const useBigCalendar = () => {
     m.locale('it')
     const localizer = momentLocalizer(m)
 
-    const onEventDrop = (event: any) => {
+    const onEventDrop = (event: eventDropProps) => {
         const { start, end } = event
+        const title = event.event.title;
         const idx = events.indexOf(event)
-        const updatedEvent = { ...event, start, end }
+        const updatedEvent = { ...event, start, end, title }
         const nextEvents = [...events]
 
         nextEvents.splice(idx, 1, updatedEvent)

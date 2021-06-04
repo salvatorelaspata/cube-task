@@ -27,19 +27,31 @@ const Timesheet: React.FC = () => {
         slotClick,
         saveEvent,
         setOpen,
-        setNewEvent
+        setNewEvent,
+        editEvent,
+        isNew,
+        modificaEvent,
+        saveEditEvent,
+        enabledEdit,
+        isEdit
     } = useBigCalendar();
 
     const DnDCalendar = useMemo(() => withDragAndDrop<any, object>(Calendar as ComponentType<CalendarProps<any, object>>), this)
 
     return (
         <>
-            {open && <FormDialog title="Aggiungi Evento"
+            {open && <FormDialog
+                title={isNew ? "Aggiungi Evento" : modificaEvent.event}
+                isNew={isNew}
                 open={open}
                 setOpen={setOpen}
                 saveEvent={saveEvent}
                 newEvent={newEvent}
                 setNewEvent={setNewEvent}
+                saveEditEvent={saveEditEvent}
+                modificaEvent={modificaEvent}
+                enabledEdit={enabledEdit}
+                isEdit={isEdit}
             />}
             <DnDCalendar
                 defaultDate={defaultDate}
@@ -50,7 +62,7 @@ const Timesheet: React.FC = () => {
                 selectable={true}
                 view={view}
                 onView={setView}
-                // onSelectEvent={event => alert(event.title)}
+                onSelectEvent={editEvent}
                 onSelectSlot={slotClick}
                 startAccessor="start"
                 endAccessor="end"

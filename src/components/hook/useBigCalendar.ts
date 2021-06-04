@@ -114,7 +114,9 @@ export const useBigCalendar = () => {
             setEvents(nextEvents)
             setOpen(false);
             setIsEdit(false);
-            debugger
+            setIsNew(true);
+            setNewEvent(initialNewEvent)
+
         }
     }
     const enabledEdit = () => {

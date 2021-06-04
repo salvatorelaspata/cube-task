@@ -74,7 +74,6 @@ const FormDialog: React.FC<FormProps> = ({
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
                         displayEmpty
-
                         value={newEvent.event}
                         onChange={handleChange}
                         fullWidth

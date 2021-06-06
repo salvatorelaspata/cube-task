@@ -1,59 +1,37 @@
 import React, { Dispatch, SetStateAction, useState } from "react";
+import clsx from "clsx";
+import { Grid, useMediaQuery, useTheme } from "@material-ui/core";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
-import { EventProp } from "../hook/types";
-import "./FormDialog.css";
 import CreateIcon from "@material-ui/icons/Create";
 import DeleteIcon from "@material-ui/icons/Delete";
-import { Grid, useMediaQuery, useTheme } from "@material-ui/core";
-import clsx from "clsx";
+import { initialToDo, mockOptions, ToDoProp } from "../hook/types";
 import { useStyles } from "../hook/useStyles";
 import InputOutlined from "../layout/Input/InputOutlined";
 import SelectOutlined from "../layout/Input/SelectOutlined";
 
+import "./AddToDoDialog.css";
+
 interface FormProps {
     open: boolean;
     setOpen: Dispatch<SetStateAction<boolean>>;
-    title: string;
     isNew: boolean;
-    currentEvent: EventProp;
-    setCurrentEvent: Dispatch<SetStateAction<EventProp>>;
-
-    saveEvent: () => void;
-    editEvent: () => void;
-    // newEvent: newEventProp;
-    // modificaEvent: newEventProp;
+    saveToDo: (obj: ToDoProp) => void;
+    editToDo: (obj: ToDoProp) => void;
 }
-const mockOptions = [
-    {
-        key: "acea",
-        value: "Acea",
-    },
-    {
-        key: "erg",
-        value: "Erg",
-    },
-    {
-        key: "superlinda",
-        value: "Superlinda",
-    },
-];
-const FormDialog: React.FC<FormProps> = ({
+
+const AddToDoDialog: React.FC<FormProps> = ({
     open,
     setOpen,
-    title,
     isNew,
-    currentEvent,
-    setCurrentEvent,
-    saveEvent,
-    editEvent,
+    saveToDo,
+    editToDo,
 }) => {
     const [isEdit, setIsEdit] = useState<boolean>(isNew);
-    let currentData = currentEvent.info.toLocaleString();
+    const [currentToDo, setCurrentToDo] = useState<ToDoProp>(initialToDo);
 
     const theme = useTheme();
     const classes = useStyles(theme);
@@ -64,7 +42,7 @@ const FormDialog: React.FC<FormProps> = ({
     };
 
     const handleChange = (e: any) => {
-        setCurrentEvent({ ...currentEvent, [e.target.name]: e.target.value });
+        setCurrentToDo({ ...currentToDo, [e.target.name]: e.target.value });
     };
 
     return (
@@ -77,37 +55,39 @@ const FormDialog: React.FC<FormProps> = ({
             aria-labelledby="form-dialog-title"
         >
             <DialogTitle
-                id="form-dialog-title"
                 style={{
                     width: "100%",
                     display: "flex",
                     justifyContent: "space-between",
                 }}
             >
-                {title}
+                {currentToDo.title || "Creazione"}
             </DialogTitle>
 
             <DialogContent>
-                <DialogContentText>
-                    Data selezionata: {currentData}
-                </DialogContentText>
-                <Grid justify="space-around">
+                <Grid container justify="space-around">
                     <SelectOutlined
-                        value={currentEvent.event}
-                        label="Commessa"
-                        name="event"
+                        value={currentToDo.state || ""}
+                        label="Stato"
+                        name="state"
                         handleChange={handleChange}
                         options={mockOptions}
-                        fullWidth={false}
                         disabled={!isEdit}
                     />
                     <InputOutlined
                         handleChange={handleChange}
-                        label="Ore"
-                        name="ore"
-                        type="number"
-                        value={currentEvent.ore}
-                        fullWidth={false}
+                        label="Title"
+                        name="title"
+                        type="title"
+                        value={currentToDo.title || ""}
+                        disabled={!isEdit}
+                    />
+                    <InputOutlined
+                        handleChange={handleChange}
+                        label="Text"
+                        name="text"
+                        type="text"
+                        value={currentToDo.text || ""}
                         disabled={!isEdit}
                     />
                 </Grid>
@@ -130,11 +110,15 @@ const FormDialog: React.FC<FormProps> = ({
                 )}
                 <div>
                     <Button
-                        onClick={isNew ? saveEvent : editEvent}
+                        onClick={() => {
+                            isNew
+                                ? saveToDo(currentToDo)
+                                : editToDo(currentToDo);
+                        }}
                         color="primary"
                         className={clsx(!isEdit && classes.none)}
                     >
-                        {isNew ? "Salva evento" : "Modifica Evento"}
+                        Salva
                     </Button>
                     <Button onClick={handleClose} color="primary">
                         Chiudi
@@ -144,4 +128,4 @@ const FormDialog: React.FC<FormProps> = ({
         </Dialog>
     );
 };
-export default FormDialog;
+export default AddToDoDialog;

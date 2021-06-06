@@ -9,7 +9,7 @@ import {
 } from "react-big-calendar";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import { useBigCalendar } from "../components/hook/useBigCalendar";
-import FormDialog from "../components/Dialog/FormDialog";
+import AddEventDialog from "../components/Dialog/AddEventDialog";
 
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -53,7 +53,7 @@ const Timesheet: React.FC = () => {
     return (
         <>
             {open && (
-                <FormDialog
+                <AddEventDialog
                     open={open}
                     setOpen={setOpen}
                     title={isNew ? "Aggiungi Evento" : currentEvent.event}

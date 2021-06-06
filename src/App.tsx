@@ -14,45 +14,51 @@ import { ITEMS_MENU } from "./config/constants";
 import { useDrawer } from "./components/hook/useDrawer";
 
 const App: React.FC = () => {
-   const classes = useStyles();
-   const { darkState, darkTheme, handleThemeChange } = useDarkMode(true);
-   const {
-      open: isOpenDrawer,
-      handleDrawerOpen,
-      handleDrawerClose,
-   } = useDrawer(false);
+    const classes = useStyles();
+    const { darkState, darkTheme, handleThemeChange } = useDarkMode(true);
+    const {
+        open: isOpenDrawer,
+        handleDrawerOpen,
+        handleDrawerClose,
+    } = useDrawer(false);
 
-   return (
-      <div className={classes.root}>
-         <ThemeProvider theme={darkTheme}>
-            <CssBaseline />
-            <Bar
-               open={isOpenDrawer}
-               handleDrawerOpen={handleDrawerOpen}
-               darkState={darkState}
-               handleThemeChange={handleThemeChange}
-            />
-            <Router>
-               <DrawerMenu
-                  open={isOpenDrawer}
-                  handleDrawerClose={handleDrawerClose}
-               />
+    return (
+        <div className={classes.root}>
+            <ThemeProvider theme={darkTheme}>
+                <CssBaseline />
+                <Bar
+                    open={isOpenDrawer}
+                    handleDrawerOpen={handleDrawerOpen}
+                    darkState={darkState}
+                    handleThemeChange={handleThemeChange}
+                />
+                <Router>
+                    <DrawerMenu
+                        open={isOpenDrawer}
+                        handleDrawerClose={handleDrawerClose}
+                    />
 
-               <main className={classes.content}>
-                  <div className={classes.appBarSpacer} />
-                  {/* ROUTING */}
-                  <Switch>
-                     {ITEMS_MENU(darkState, handleThemeChange).map((route) => (
-                        <Route key={route.id} exact path={route.path}>
-                           {route.component}
-                        </Route>
-                     ))}
-                  </Switch>
-               </main>
-            </Router>
-         </ThemeProvider>
-      </div>
-   );
+                    <main className={classes.content}>
+                        <div className={classes.appBarSpacer} />
+                        {/* ROUTING */}
+                        <Switch>
+                            {ITEMS_MENU(darkState, handleThemeChange).map(
+                                (route) => (
+                                    <Route
+                                        key={route.id}
+                                        exact
+                                        path={route.path}
+                                    >
+                                        {route.component}
+                                    </Route>
+                                )
+                            )}
+                        </Switch>
+                    </main>
+                </Router>
+            </ThemeProvider>
+        </div>
+    );
 };
 
 export default App;

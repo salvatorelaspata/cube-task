@@ -1,116 +1,64 @@
 import { Fab, Grid, Paper, Switch } from "@material-ui/core";
 import clsx from "clsx";
-import React, { useState } from "react";
+import React, { useMemo } from "react";
 import { useStyles } from "../components/hook/useStyles";
 import StandardContainer from "../components/layout/StandardContainer";
 import AddIcon from "@material-ui/icons/Add";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import { useTodo } from "../components/hook/useTodo";
+import { ToDoProp } from "../components/hook/types";
+import AddToDoDialog from "../components/Dialog/AddToDoDialog";
 
-interface ListInterface {
-    id: number;
-    text: string;
-}
+const grid = 8;
+const getListStyle = (isDraggingOver: boolean) => ({
+    background: isDraggingOver ? "lightblue" : "lightgrey",
+    padding: grid,
+    width: 250,
+});
+const getItemStyle = (isDragging: boolean, draggableStyle: any) => ({
+    // some basic styles to make the items look a bit nicer
+    userSelect: "none",
+    padding: grid * 2,
+    margin: `0 0 ${grid}px 0`,
 
-interface Lists {
-    todo: { id: number, title: string, list: ListInterface[] };
-    inProgress: { id: number, title: string, list: ListInterface[] };
-    completed: { id: number, title: string, list: ListInterface[] };
-    suspend: { id: number, title: string, list: ListInterface[] };
-    deleted: { id: number, title: string, list: ListInterface[] };
-}
+    // change background colour if dragging
+    background: isDragging ? "lightgreen" : "grey",
+
+    // styles we need to apply on draggables
+    ...draggableStyle,
+});
 
 const ToDo: React.FC = () => {
+    const {
+        isDnd,
+        setIsDnd,
+        lists,
+        onDragEnd,
+        open,
+        setOpen,
+        saveToDo,
+        editToDo,
+    } = useTodo();
     const classes = useStyles();
-    const [isDnd, setIsDnd] = useState<boolean>(true);
-    const [lists] = useState<Lists>({
-        todo: {
-            id: 1, title: 'ToDo', list: [
-                { id: 1, text: "text 1" },
-                { id: 2, text: "text 2" },
-                { id: 3, text: "text 3" },
-                { id: 4, text: "text 4" },
-                { id: 5, text: "text 5" },
-                { id: 6, text: "text 6" },
-                { id: 7, text: "text 7" },
-                { id: 8, text: "text 8" },
-            ]
-        },
-        inProgress: {
-            id: 2, title: 'In Progress', list: [
-                { id: 11, text: "text 11" },
-                { id: 22, text: "text 22" },
-                { id: 33, text: "text 33" },
-                { id: 44, text: "text 44" },
-                { id: 55, text: "text 55" },
-                { id: 66, text: "text 66" },
-                { id: 77, text: "text 77" },
-                { id: 88, text: "text 88" },
-            ]
-        },
-        completed: {
-            id: 3, title: 'Completed', list: [
-                { id: 111, text: "text 111" },
-                { id: 222, text: "text 222" },
-                { id: 333, text: "text 333" },
-                { id: 444, text: "text 444" },
-                { id: 555, text: "text 555" },
-                { id: 666, text: "text 666" },
-                { id: 777, text: "text 777" },
-                { id: 899, text: "text 888" },
-            ]
-        },
-        suspend: {
-            id: 4, title: 'Suspend', list: [
-                { id: 1111, text: "text 1111" },
-                { id: 2222, text: "text 2222" },
-                { id: 3333, text: "text 3333" },
-                { id: 4444, text: "text 4444" },
-                { id: 5555, text: "text 5555" },
-                { id: 6666, text: "text 6666" },
-                { id: 7777, text: "text 7777" },
-                { id: 8888, text: "text 8888" },
-            ]
-        },
-        deleted: {
-            id: 5, title: 'Deleted', list: [
-                { id: 11111, text: "text 11111" },
-                { id: 22222, text: "text 22222" },
-                { id: 33333, text: "text 33333" },
-                { id: 44444, text: "text 44444" },
-                { id: 55555, text: "text 55555" },
-                { id: 66666, text: "text 66666" },
-                { id: 77777, text: "text 77777" },
-                { id: 88888, text: "text 88888" },
-            ]
-        },
-    });
 
     const onChangeView = () => {
         setIsDnd(!isDnd);
     };
 
-    const onDragEnd = (...rest: any[]) => {
-        console.table(...rest);
+    const openCreateDialog = () => {
+        setOpen(true);
     };
+    const dialog = (
+        <AddToDoDialog
+            open={open}
+            setOpen={setOpen}
+            isNew={true}
+            saveToDo={(obj: ToDoProp) => saveToDo(obj)}
+            editToDo={(obj: ToDoProp) => editToDo(obj)}
+        />
+    );
+    const addToDo = useMemo(() => dialog, [dialog]);
 
-    const grid = 8;
-    const getListStyle = (isDraggingOver: boolean) => ({
-        background: isDraggingOver ? "lightblue" : "lightgrey",
-        padding: grid,
-        width: 250,
-    });
-    const getItemStyle = (isDragging: boolean, draggableStyle: any) => ({
-        // some basic styles to make the items look a bit nicer
-        userSelect: "none",
-        padding: grid * 2,
-        margin: `0 0 ${grid}px 0`,
-
-        // change background colour if dragging
-        background: isDragging ? "lightgreen" : "grey",
-
-        // styles we need to apply on draggables
-        ...draggableStyle,
-    });
     return (
         <StandardContainer>
             <Grid item xs={12} md={12} lg={12}>
@@ -145,45 +93,65 @@ const ToDo: React.FC = () => {
                                     const { title, list } = obj;
 
                                     return (
-                                        <Droppable droppableId={key}>
+                                        <Droppable key={key} droppableId={key}>
                                             {(provided, snapshot) => (
                                                 <div
                                                     ref={provided.innerRef}
-                                                    style={getListStyle(snapshot.isDraggingOver)}
+                                                    style={getListStyle(
+                                                        snapshot.isDraggingOver
+                                                    )}
                                                 >
                                                     <h2>{title}</h2>
-                                                    {/* LOOP ITEMS */}
-                                                    {list.map((e: { id: number, text: string }, i: number) => {
-                                                        return (
-                                                            <Draggable
-                                                                key={e.id}
-                                                                draggableId={e.text}
-                                                                index={i}
-                                                            >
-                                                                {(provided, snapshot) => (
-                                                                    <div
-                                                                        ref={provided.innerRef}
-                                                                        {...provided.draggableProps}
-                                                                        {...provided.dragHandleProps}
-                                                                        style={getItemStyle(
-                                                                            snapshot.isDragging,
-                                                                            provided.draggableProps.style
-                                                                        )}
-                                                                    >
-                                                                        {e.text}
-                                                                    </div>
-                                                                )}
-                                                            </Draggable>
-                                                        );
-                                                    })}
+                                                    {list.map(
+                                                        (
+                                                            e: ToDoProp,
+                                                            i: number
+                                                        ) => {
+                                                            return (
+                                                                <Draggable
+                                                                    key={e.id}
+                                                                    draggableId={
+                                                                        e.title
+                                                                    }
+                                                                    index={i}
+                                                                >
+                                                                    {(
+                                                                        provided,
+                                                                        snapshot
+                                                                    ) => (
+                                                                        <div
+                                                                            ref={
+                                                                                provided.innerRef
+                                                                            }
+                                                                            {...provided.draggableProps}
+                                                                            {...provided.dragHandleProps}
+                                                                            style={getItemStyle(
+                                                                                snapshot.isDragging,
+                                                                                provided
+                                                                                    .draggableProps
+                                                                                    .style
+                                                                            )}
+                                                                        >
+                                                                            {
+                                                                                e.title
+                                                                            }
+                                                                            <br />
+                                                                            {
+                                                                                e.text
+                                                                            }
+                                                                        </div>
+                                                                    )}
+                                                                </Draggable>
+                                                            );
+                                                        }
+                                                    )}
 
                                                     {provided.placeholder}
                                                 </div>
                                             )}
                                         </Droppable>
-                                    )
+                                    );
                                 })}
-
                             </DragDropContext>
                         </div>
                     ) : (
@@ -196,9 +164,12 @@ const ToDo: React.FC = () => {
                 color="secondary"
                 aria-label="Add Project"
                 className={classes.fabMargin}
+                onClick={openCreateDialog}
             >
                 <AddIcon />
             </Fab>
+
+            {open && addToDo}
         </StandardContainer>
     );
 };

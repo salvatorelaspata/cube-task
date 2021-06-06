@@ -1,58 +1,69 @@
 import React, { ComponentType, useMemo, useState } from "react";
-import moment from 'moment';
+import moment from "moment";
 
-import { Calendar, CalendarProps, NavigateAction, View } from 'react-big-calendar';
+import {
+    Calendar,
+    CalendarProps,
+    NavigateAction,
+    View,
+} from "react-big-calendar";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
-import { useBigCalendar } from '../components/hook/useBigCalendar';
+import { useBigCalendar } from "../components/hook/useBigCalendar";
 import FormDialog from "../components/Dialog/FormDialog";
 
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 
 const Timesheet: React.FC = () => {
-    const [defaultDate, setDefaultDate] = useState<Date>(moment().toDate())
-    const [view, setView] = useState<View>('month')
-    const [action, setAction] = useState<NavigateAction>('TODAY')
-    const onCalendarNavigate = (newDate: Date, view: View, action: NavigateAction) => {
+    const [defaultDate, setDefaultDate] = useState<Date>(moment().toDate());
+    const [view, setView] = useState<View>("month");
+    const [action, setAction] = useState<NavigateAction>("TODAY");
+    console.log(action);
+
+    const onCalendarNavigate = (
+        newDate: Date,
+        view: View,
+        action: NavigateAction
+    ) => {
         setDefaultDate(newDate);
         setView(view);
         setAction(action);
-    }
+    };
+
     const {
         localizer,
         events,
         open,
-        newEvent,
-        onEventDrop,
-        slotClick,
-        saveEvent,
         setOpen,
-        setNewEvent,
+        currentEvent,
+        setCurrentEvent,
+        onEventDrop,
+        onSelectSlot,
+        saveEvent,
         editEvent,
+        onEditEvent,
         isNew,
-        modificaEvent,
-        saveEditEvent,
-        enabledEdit,
-        isEdit
     } = useBigCalendar();
 
-    const DnDCalendar = useMemo(() => withDragAndDrop<any, object>(Calendar as ComponentType<CalendarProps<any, object>>), this)
+    const CalendarWithDnD = withDragAndDrop<any, object>(
+        Calendar as ComponentType<CalendarProps<any, object>>
+    );
+    const DnDCalendar = useMemo(() => CalendarWithDnD, [CalendarWithDnD]);
 
     return (
         <>
-            {open && <FormDialog
-                title={isNew ? "Aggiungi Evento" : modificaEvent.event}
-                isNew={isNew}
-                open={open}
-                setOpen={setOpen}
-                saveEvent={saveEvent}
-                newEvent={newEvent}
-                setNewEvent={setNewEvent}
-                saveEditEvent={saveEditEvent}
-                modificaEvent={modificaEvent}
-                enabledEdit={enabledEdit}
-                isEdit={isEdit}
-            />}
+            {open && (
+                <FormDialog
+                    open={open}
+                    setOpen={setOpen}
+                    title={isNew ? "Aggiungi Evento" : currentEvent.event}
+                    isNew={isNew}
+                    currentEvent={currentEvent}
+                    setCurrentEvent={setCurrentEvent}
+                    saveEvent={saveEvent}
+                    editEvent={editEvent}
+                />
+            )}
             <DnDCalendar
                 defaultDate={defaultDate}
                 onNavigate={onCalendarNavigate}
@@ -62,11 +73,11 @@ const Timesheet: React.FC = () => {
                 selectable={true}
                 view={view}
                 onView={setView}
-                onSelectEvent={editEvent}
-                onSelectSlot={slotClick}
+                onSelectEvent={onEditEvent}
+                onSelectSlot={onSelectSlot}
                 startAccessor="start"
                 endAccessor="end"
-                style={{ height: '90vh', padding: 10 }}
+                style={{ height: "90vh", padding: 10 }}
             />
         </>
     );

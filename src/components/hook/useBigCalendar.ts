@@ -1,142 +1,157 @@
-import React, { useEffect, useState } from "react";
-import { Event, momentLocalizer } from 'react-big-calendar'
-import moment from 'moment';
-import { newEventProp } from './types';
+import { useEffect, useState } from "react";
+import { Event, momentLocalizer } from "react-big-calendar";
+import moment from "moment";
+import { EventDropProp, EventProp, SlotProp } from "./types";
 
-const initialNewEvent = {
-    info: '',
-    event: '',
-    ore: ''
+const initialEvent = {
+    info: "",
+    event: "",
+    ore: "",
 };
 
-
 export const useBigCalendar = () => {
-
-    const [events, setEvents] = useState<Event[]>([])
+    const [events, setEvents] = useState<Event[]>([]);
     const [open, setOpen] = useState<boolean>(false);
-    const [newEvent, setNewEvent] = useState<newEventProp>(initialNewEvent);
-    const [modificaEvent, setModificaEvent] = useState<newEventProp>(initialNewEvent);
+    const [currentEvent, setCurrentEvent] = useState<EventProp>(initialEvent);
+
     const [isNew, setIsNew] = useState<boolean>(true);
-    const [isEdit, setIsEdit] = useState<boolean>(false);
-
-
-    useEffect(() => {
-        let arr = [{
-            start: new Date(), end: new Date(), title: "special event 1"
-        },
-        {
-            start: new Date(), end: new Date(), title: "special event 2"
-        }]
-        setEvents(arr)
-    }, [])
 
     const m = moment;
-    m.locale('it')
-    const localizer = momentLocalizer(m)
+    m.locale("it");
+    const localizer = momentLocalizer(m);
 
-    const onEventDrop = (event: any) => {
-        const { start, end } = event
-        const title = event.event.title;
-        const idx = events.indexOf(event)
-        const updatedEvent = { ...event, start, end, title }
-        const nextEvents = [...events]
+    useEffect(() => {
+        let arr = [
+            {
+                start: new Date(),
+                end: new Date(),
+                title: "special event 1",
+            },
+            {
+                start: new Date(),
+                end: new Date(),
+                title: "special event 2",
+            },
+        ];
+        setEvents(arr);
+    }, []);
 
-        nextEvents.splice(idx, 1, updatedEvent)
-        setEvents(nextEvents)
-    }
+    // Evento scatenato al click su uno slot del calendario (create)
+    const onSelectSlot = (slotInfo: SlotProp) => {
+        debugger;
+        if (slotInfo && slotInfo.start) {
+            const info = slotInfo.start;
 
+            setCurrentEvent({ ...initialEvent, info });
+            setIsNew(true);
+            setOpen(true);
+        }
+    };
 
-    const slotClick = (slotInfo: any) => {
-        let data = slotInfo.start;
-        setOpen(true)
+    // Evento scatenato al drag&drop dell'evento (edit)
+    const onEventDrop = (event: EventDropProp) => {
+        if (
+            event &&
+            event.start &&
+            event.end &&
+            event.event &&
+            event.event.title
+        ) {
+            const { start, end } = event;
+            const s = start as Date | undefined;
+            const e = end as Date | undefined;
+            const { title } = event.event;
+            const idx = events.indexOf(event.event);
 
-        setNewEvent({ ...newEvent, info: data });
-    }
+            events[idx] = { ...event.event, start: s, end: e, title };
+            const nextEvents = [...events];
+            setEvents(nextEvents);
+        }
+    };
+
+    // Evento scatenato al click su un evento (edit)
+    const onEditEvent = (event: Event) => {
+        if (event && event.start && event.title) {
+            let [title, ore] = event.title.split(" ");
+
+            let updateEvent: EventProp = {
+                info: event.start,
+                event: title,
+                ore: ore,
+            };
+            setCurrentEvent(updateEvent);
+        }
+        setIsNew(false);
+        setOpen(true);
+    };
+
+    //Creazione evento (save)
     const saveEvent = () => {
-        const { info, event, ore } = newEvent;
-        if (event == "") {
+        debugger;
+        const { info, event, ore } = currentEvent;
+
+        if (event === "") {
             alert("Inserire la commessa");
             return;
         }
-        if (ore == "") {
+        if (ore === "") {
             alert("Inserire le ore lavorate");
             return;
         }
         let obj = {
-            start: info, end: info, title: `${event} ${ore} ora/e lavorate`,
-        }
+            start: info,
+            end: info,
+            title: `${event} ${ore} ora/e lavorate`,
+        };
         let arr: any = [...events, obj];
 
         setEvents(arr);
         setOpen(false);
-        setIsEdit(false);
 
-        setNewEvent(initialNewEvent)
-    }
-    //modifico evento
-    const editEvent = (e: any) => {
-        let title = e.title.split(" ")[0];
-        let ore = e.title.split(" ")[1];
+        setCurrentEvent(initialEvent);
+    };
 
-        let updateEvent = {
-            info: e.start,
-            event: title,
-            ore: ore
-        };
-        setModificaEvent(updateEvent);
-        setIsNew(false);
-        setOpen(true);
-    }
-    const saveEditEvent = () => {
-        if (!isEdit) {
-            alert("Cliccare sulla matita per modificare");
+    //Modifica evento (edit)
+    const editEvent = () => {
+        const { event, ore } = currentEvent;
+
+        if (event === "") {
+            alert("Inserire la commessa");
             return;
-        } else {
-            const { info, event, ore } = newEvent;
-
-            if (event == "") {
-                alert("Inserire la commessa");
-                return;
-            }
-            if (ore == "") {
-                alert("Inserire le ore lavorate");
-                return;
-            }
-            let obj: any = {
-                start: modificaEvent.info, end: modificaEvent.info, title: `${event} ${ore} ora/e lavorate`,
-            }
-            let idx = events.indexOf(obj);
-
-            const nextEvents = [...events]
-
-            nextEvents.splice(idx, 1, obj)
-
-            setEvents(nextEvents)
-            setOpen(false);
-            setIsEdit(false);
-            setIsNew(true);
-            setNewEvent(initialNewEvent)
-
         }
-    }
-    const enabledEdit = () => {
-        setIsEdit(true);
-    }
+        if (ore === "") {
+            alert("Inserire le ore lavorate");
+            return;
+        }
+        let obj: any = {
+            start: currentEvent.info,
+            end: currentEvent.info,
+            title: `${event} ${ore} ora/e lavorate`,
+        };
+        let idx = events.indexOf(obj);
+
+        const nextEvents = [...events];
+
+        nextEvents.splice(idx, 1, obj);
+
+        setEvents(nextEvents);
+        setOpen(false);
+        setIsNew(true);
+        setCurrentEvent(initialEvent);
+    };
+
     return {
         localizer,
         events,
         saveEvent,
         onEventDrop,
-        slotClick,
+        onSelectSlot,
         open,
         setOpen,
-        newEvent,
-        setNewEvent,
-        editEvent,
+        currentEvent,
+        setCurrentEvent,
+        onEditEvent,
         isNew,
-        modificaEvent,
-        saveEditEvent,
-        enabledEdit,
-        isEdit
+        editEvent,
     };
 };

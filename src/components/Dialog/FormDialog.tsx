@@ -1,113 +1,145 @@
-import React, { Dispatch, SetStateAction } from 'react';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Select from '@material-ui/core/Select';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import { newEventProp } from '../hook/types';
-import './FormDialog.css'
-import CreateIcon from '@material-ui/icons/Create';
-import DeleteIcon from '@material-ui/icons/Delete';
+import React, { Dispatch, SetStateAction, useState } from "react";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Button from "@material-ui/core/Button";
+import { EventProp } from "../hook/types";
+import "./FormDialog.css";
+import CreateIcon from "@material-ui/icons/Create";
+import DeleteIcon from "@material-ui/icons/Delete";
+import { Grid, useMediaQuery, useTheme } from "@material-ui/core";
+import clsx from "clsx";
+import { useStyles } from "../hook/useStyles";
+import InputOutlined from "../layout/Input/InputOutlined";
+import SelectOutlined from "../layout/Input/SelectOutlined";
 
 interface FormProps {
-    title: string,
-    isNew: boolean,
-    isEdit: boolean,
-    open: boolean,
-    setOpen: Dispatch<SetStateAction<boolean>>,
-    saveEvent: () => void,
-    saveEditEvent: () => void,
-    enabledEdit: () => void,
-    newEvent: newEventProp,
-    modificaEvent: newEventProp,
-    setNewEvent: Dispatch<SetStateAction<newEventProp>>
-}
+    open: boolean;
+    setOpen: Dispatch<SetStateAction<boolean>>;
+    title: string;
+    isNew: boolean;
+    currentEvent: EventProp;
+    setCurrentEvent: Dispatch<SetStateAction<EventProp>>;
 
+    saveEvent: () => void;
+    editEvent: () => void;
+    // newEvent: newEventProp;
+    // modificaEvent: newEventProp;
+}
+const mockOptions = [
+    {
+        key: "acea",
+        value: "Acea",
+    },
+    {
+        key: "erg",
+        value: "Erg",
+    },
+    {
+        key: "superlinda",
+        value: "Superlinda",
+    },
+];
 const FormDialog: React.FC<FormProps> = ({
-    title,
-    isNew,
     open,
     setOpen,
+    title,
+    isNew,
+    currentEvent,
+    setCurrentEvent,
     saveEvent,
-    saveEditEvent,
-    newEvent,
-    setNewEvent,
-    modificaEvent,
-    enabledEdit,
-    isEdit
+    editEvent,
 }) => {
+    const [isEdit, setIsEdit] = useState<boolean>(isNew);
+    let currentData = currentEvent.info.toLocaleString();
 
-    let data_string = newEvent.info.toLocaleString();
-    let data_edit = modificaEvent.info.toLocaleString();
+    const theme = useTheme();
+    const classes = useStyles(theme);
+    const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
     const handleClose = () => {
         setOpen(false);
     };
-    const handleChange = (e: any) => {
-        let value: string = e.target.value;
-        setNewEvent({ ...newEvent, event: value })
-    }
-    const handleChangeOre = (e: any) => {
-        let value: string = e.target.value;
-        setNewEvent({ ...newEvent, ore: value })
-    }
-    return (
-        <div>
-            < Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" >
 
-                <DialogTitle id="form-dialog-title" >
-                    {title}
-                    {!isNew && <Button onClick={enabledEdit} className="button-pen" variant="outlined" ><CreateIcon /></Button>}
-                    {!isNew && <Button className="button-delete" variant="outlined"><DeleteIcon /></Button>}
-                </DialogTitle>
-                < DialogContent >
-                    <DialogContentText>
-                        Data selezionata:{!data_string ? data_edit : data_string}
-                    </DialogContentText>
-                    <InputLabel id="demo-simple-select-label">Commessa:</InputLabel>
-                    <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        displayEmpty
-                        value={newEvent.event}
-                        onChange={handleChange}
-                        fullWidth
-                    >
-                        {!isNew && <MenuItem value="">
-                            <em>{modificaEvent.event}</em>
-                        </MenuItem>}
-                        <MenuItem disabled={isNew && !isEdit ? false : !isNew && isEdit ? false : true} value={"ERG"}>Erg</MenuItem>
-                        <MenuItem disabled={isNew && !isEdit ? false : !isNew && isEdit ? false : true} value={"ACEA"}>Acea</MenuItem>
-                        <MenuItem disabled={isNew && !isEdit ? false : !isNew && isEdit ? false : true} value={"SUPERLIND"}>Superlind</MenuItem>
-                    </Select>
-                    < TextField
-                        autoFocus
-                        placeholder={!isNew ? modificaEvent.ore : ""}
-                        margin="dense"
-                        id="name"
-                        value={newEvent.ore}
-                        onChange={handleChangeOre}
-                        label="Enter hours:"
-                        type="number"
-                        disabled={isNew && !isEdit ? false : !isNew && isEdit ? false : true}
-                        fullWidth
+    const handleChange = (e: any) => {
+        setCurrentEvent({ ...currentEvent, [e.target.name]: e.target.value });
+    };
+
+    return (
+        <Dialog
+            fullScreen={fullScreen}
+            fullWidth={true}
+            open={open}
+            maxWidth={"sm"}
+            onClose={handleClose}
+            aria-labelledby="form-dialog-title"
+        >
+            <DialogTitle
+                id="form-dialog-title"
+                style={{
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "space-between",
+                }}
+            >
+                {title}
+            </DialogTitle>
+
+            <DialogContent>
+                <DialogContentText>
+                    Data selezionata: {currentData}
+                </DialogContentText>
+                <Grid justify="space-around">
+                    <SelectOutlined
+                        value={currentEvent.event}
+                        label="Commessa"
+                        name="event"
+                        handleChange={handleChange}
+                        options={mockOptions}
+                        fullWidth={false}
                     />
-                </DialogContent>
-                < DialogActions >
-                    <Button onClick={handleClose} color="primary" >
-                        Chiudi
-                    </Button>
-                    < Button onClick={isNew ? saveEvent : saveEditEvent} color="primary" >
+                    <InputOutlined
+                        handleChange={handleChange}
+                        label="Ore"
+                        name="ore"
+                        type="number"
+                        value={currentEvent.ore}
+                        fullWidth={false}
+                    />
+                </Grid>
+            </DialogContent>
+            <DialogActions
+                style={{
+                    justifyContent: !isNew ? "space-between" : "flex-end",
+                }}
+            >
+                {!isNew && (
+                    <div>
+                        <Button onClick={() => setIsEdit(!isEdit)}>
+                            <CreateIcon />
+                        </Button>
+
+                        <Button>
+                            <DeleteIcon />
+                        </Button>
+                    </div>
+                )}
+                <div>
+                    <Button
+                        onClick={isNew ? saveEvent : editEvent}
+                        color="primary"
+                        className={clsx(!isEdit && classes.none)}
+                    >
                         {isNew ? "Salva evento" : "Modifica Evento"}
                     </Button>
-                </DialogActions>
-            </Dialog>
-        </div >
+                    <Button onClick={handleClose} color="primary">
+                        Chiudi
+                    </Button>
+                </div>
+            </DialogActions>
+        </Dialog>
     );
 };
 export default FormDialog;

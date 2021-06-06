@@ -99,6 +99,7 @@ const FormDialog: React.FC<FormProps> = ({
                         handleChange={handleChange}
                         options={mockOptions}
                         fullWidth={false}
+                        disabled={!isEdit}
                     />
                     <InputOutlined
                         handleChange={handleChange}
@@ -107,6 +108,7 @@ const FormDialog: React.FC<FormProps> = ({
                         type="number"
                         value={currentEvent.ore}
                         fullWidth={false}
+                        disabled={!isEdit}
                     />
                 </Grid>
             </DialogContent>

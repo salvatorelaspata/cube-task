@@ -15,6 +15,7 @@ interface SelectOtlinedProp {
     options: Option[];
     visible?: boolean;
     fullWidth?: boolean;
+    disabled: boolean;
 }
 
 const SelectOutlined: React.FC<SelectOtlinedProp> = ({
@@ -25,6 +26,7 @@ const SelectOutlined: React.FC<SelectOtlinedProp> = ({
     options,
     visible = true,
     fullWidth = true,
+    disabled,
 }) => {
     const theme = useTheme();
     const classes = useStyles(theme);
@@ -37,6 +39,7 @@ const SelectOutlined: React.FC<SelectOtlinedProp> = ({
                 {label}
             </InputLabel>
             <Select
+                disabled={disabled}
                 native
                 value={value}
                 onChange={handleChange}

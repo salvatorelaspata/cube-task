@@ -9,6 +9,7 @@ interface InputOtlinedProp {
     name: string;
     handleChange: (e: any) => void;
     fullWidth?: boolean;
+    disabled: boolean;
 }
 
 const InputOutlined: React.FC<InputOtlinedProp> = ({
@@ -18,6 +19,7 @@ const InputOutlined: React.FC<InputOtlinedProp> = ({
     name,
     handleChange,
     fullWidth = true,
+    disabled,
 }) => {
     const theme = useTheme();
     const classes = useStyles(theme);
@@ -28,6 +30,7 @@ const InputOutlined: React.FC<InputOtlinedProp> = ({
             fullWidth={fullWidth}
         >
             <TextField
+                disabled={disabled}
                 type={type}
                 name={name}
                 onChange={handleChange}

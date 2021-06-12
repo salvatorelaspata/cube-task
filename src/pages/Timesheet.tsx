@@ -10,6 +10,7 @@ import {
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import { useBigCalendar } from "../components/hook/useBigCalendar";
 import AddEventDialog from "../components/Dialog/AddEventDialog";
+import { EventProp } from "../components/hook/types"
 
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -18,7 +19,7 @@ const Timesheet: React.FC = () => {
     const [defaultDate, setDefaultDate] = useState<Date>(moment().toDate());
     const [view, setView] = useState<View>("month");
     const [action, setAction] = useState<NavigateAction>("TODAY");
-    console.log(action);
+
 
     const onCalendarNavigate = (
         newDate: Date,
@@ -35,14 +36,14 @@ const Timesheet: React.FC = () => {
         events,
         open,
         setOpen,
-        currentEvent,
-        setCurrentEvent,
         onEventDrop,
         onSelectSlot,
         saveEvent,
         editEvent,
         onEditEvent,
+        onDeleteEvent,
         isNew,
+        resizeEvent
     } = useBigCalendar();
 
     const CalendarWithDnD = withDragAndDrop<any, object>(
@@ -50,31 +51,42 @@ const Timesheet: React.FC = () => {
     );
     const DnDCalendar = useMemo(() => CalendarWithDnD, [CalendarWithDnD]);
 
+    const initialEvent = {
+        start: "",
+        end: "",
+        title: "",
+        ore: "",
+        slots: []
+    };
+
+    const [currentEvent, setCurrentEvent] = useState<EventProp>(initialEvent);
+
     return (
         <>
             {open && (
                 <AddEventDialog
                     open={open}
                     setOpen={setOpen}
-                    title={isNew ? "Aggiungi Evento" : currentEvent.event}
                     isNew={isNew}
-                    currentEvent={currentEvent}
-                    setCurrentEvent={setCurrentEvent}
                     saveEvent={saveEvent}
                     editEvent={editEvent}
+                    currentEvent={currentEvent}
+                    setCurrentEvent={setCurrentEvent}
+                    onDeleteEvent={onDeleteEvent}
                 />
             )}
             <DnDCalendar
                 defaultDate={defaultDate}
                 onNavigate={onCalendarNavigate}
                 onEventDrop={onEventDrop}
+                onEventResize={resizeEvent}
                 localizer={localizer}
                 events={events}
                 selectable={true}
                 view={view}
                 onView={setView}
-                onSelectEvent={onEditEvent}
-                onSelectSlot={onSelectSlot}
+                onSelectEvent={(event) => onEditEvent(event, setCurrentEvent)}
+                onSelectSlot={(slotInfo) => onSelectSlot(slotInfo, setCurrentEvent)}
                 startAccessor="start"
                 endAccessor="end"
                 style={{ height: "90vh", padding: 10 }}

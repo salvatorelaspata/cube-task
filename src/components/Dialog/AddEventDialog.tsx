@@ -5,7 +5,6 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
-import { EventProp } from "../hook/types";
 import "./AddEventDialog.css";
 import CreateIcon from "@material-ui/icons/Create";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -18,13 +17,12 @@ import SelectOutlined from "../layout/Input/SelectOutlined";
 interface FormProps {
     open: boolean;
     setOpen: Dispatch<SetStateAction<boolean>>;
-    title: string;
     isNew: boolean;
-    currentEvent: EventProp;
-    setCurrentEvent: Dispatch<SetStateAction<EventProp>>;
-
-    saveEvent: () => void;
-    editEvent: () => void;
+    saveEvent: any
+    editEvent: any
+    onDeleteEvent: any
+    currentEvent: any
+    setCurrentEvent: any
     // newEvent: newEventProp;
     // modificaEvent: newEventProp;
 }
@@ -45,15 +43,17 @@ const mockOptions = [
 const AddEventDialog: React.FC<FormProps> = ({
     open,
     setOpen,
-    title,
     isNew,
-    currentEvent,
-    setCurrentEvent,
     saveEvent,
     editEvent,
+    onDeleteEvent,
+    currentEvent,
+    setCurrentEvent
 }) => {
+
     const [isEdit, setIsEdit] = useState<boolean>(isNew);
-    let currentData = currentEvent.info.toLocaleString();
+    let currentDataStart = currentEvent.start.toLocaleString();
+    let currentDataEnd = currentEvent.end.toLocaleString();
 
     const theme = useTheme();
     const classes = useStyles(theme);
@@ -84,18 +84,20 @@ const AddEventDialog: React.FC<FormProps> = ({
                     justifyContent: "space-between",
                 }}
             >
-                {title}
+                {isNew ? "Aggiungi Evento" : currentEvent.event}
             </DialogTitle>
 
             <DialogContent>
                 <DialogContentText>
-                    Data selezionata: {currentData}
+                    {currentEvent.end !== currentEvent.start ? `Data selezionata dal ${currentDataStart} al ${currentDataEnd}`
+                        : `Data selezionata :  ${currentDataStart}`}
+
                 </DialogContentText>
                 <Grid justify="space-around">
                     <SelectOutlined
-                        value={currentEvent.event}
+                        value={currentEvent.title}
                         label="Commessa"
-                        name="event"
+                        name="title"
                         handleChange={handleChange}
                         options={mockOptions}
                         fullWidth={false}
@@ -123,14 +125,14 @@ const AddEventDialog: React.FC<FormProps> = ({
                             <CreateIcon />
                         </Button>
 
-                        <Button>
+                        <Button onClick={() => onDeleteEvent(currentEvent, setCurrentEvent)}>
                             <DeleteIcon />
                         </Button>
                     </div>
                 )}
                 <div>
                     <Button
-                        onClick={isNew ? saveEvent : editEvent}
+                        onClick={isNew ? () => saveEvent(currentEvent, setCurrentEvent) : () => editEvent(currentEvent, setCurrentEvent)}
                         color="primary"
                         className={clsx(!isEdit && classes.none)}
                     >

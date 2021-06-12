@@ -4,9 +4,17 @@ import { stringOrDate, Event } from "react-big-calendar";
  * TIMESHEET
  */
 export interface EventProp {
-    info: stringOrDate;
-    event: string;
+    start: stringOrDate;
+    end: stringOrDate;
+    title: string;
     ore: string;
+    slots: stringOrDate[]
+}
+
+export interface DeleteObjectProp {
+    end: stringOrDate;
+    start: stringOrDate;
+    title: string;
 }
 
 export interface SlotProp {

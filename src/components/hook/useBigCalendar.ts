@@ -4,15 +4,16 @@ import moment from "moment";
 import { EventDropProp, EventProp, SlotProp } from "./types";
 
 const initialEvent = {
-    info: "",
-    event: "",
+    start: "",
+    end: "",
+    title: "",
     ore: "",
+    slots: []
 };
 
 export const useBigCalendar = () => {
     const [events, setEvents] = useState<Event[]>([]);
     const [open, setOpen] = useState<boolean>(false);
-    const [currentEvent, setCurrentEvent] = useState<EventProp>(initialEvent);
 
     const [isNew, setIsNew] = useState<boolean>(true);
 
@@ -25,24 +26,28 @@ export const useBigCalendar = () => {
             {
                 start: new Date(),
                 end: new Date(),
-                title: "special event 1",
+                title: "acea 5 ora/e lavorate",
+                ore: "5 ora/e lavorate"
             },
             {
                 start: new Date(),
                 end: new Date(),
-                title: "special event 2",
+                title: "erg 7 ora/e lavorate",
+                ore: "7 ora/e lavorate"
             },
         ];
         setEvents(arr);
     }, []);
 
     // Evento scatenato al click su uno slot del calendario (create)
-    const onSelectSlot = (slotInfo: SlotProp) => {
-        debugger;
-        if (slotInfo && slotInfo.start) {
-            const info = slotInfo.start;
+    const onSelectSlot = (slotInfo: SlotProp, setCurrentEvent: any) => {
+        debugger
+        if (slotInfo && slotInfo.start && slotInfo.end) {
+            const start = slotInfo.start;
+            const end = slotInfo.end;
+            const slots = slotInfo.slots;
 
-            setCurrentEvent({ ...initialEvent, info });
+            setCurrentEvent({ ...initialEvent, start, end, slots });
             setIsNew(true);
             setOpen(true);
         }
@@ -69,15 +74,31 @@ export const useBigCalendar = () => {
         }
     };
 
+    const resizeEvent = (event: any) => {
+        const { start, end } = event;
+
+        //sostituire title con id quando ci sarà il db
+        const nextEvents = events.map(existingEvent => {
+            return existingEvent.title == event.event.title
+                ? { ...existingEvent, start, end }
+                : existingEvent;
+        });
+
+        setEvents(nextEvents);
+    }
+
     // Evento scatenato al click su un evento (edit)
-    const onEditEvent = (event: Event) => {
-        if (event && event.start && event.title) {
+    const onEditEvent = (event: Event, setCurrentEvent: any) => {
+        debugger
+        if (event && event.start && event.end && event.title) {
             let [title, ore] = event.title.split(" ");
 
             let updateEvent: EventProp = {
-                info: event.start,
-                event: title,
+                start: event.start,
+                end: event.end,
+                title: title,
                 ore: ore,
+                slots: []
             };
             setCurrentEvent(updateEvent);
         }
@@ -85,12 +106,35 @@ export const useBigCalendar = () => {
         setOpen(true);
     };
 
-    //Creazione evento (save)
-    const saveEvent = () => {
-        debugger;
-        const { info, event, ore } = currentEvent;
+    const onDeleteEvent = (currentEvent: any, setCurrentEvent: any) => {
+        const { title, start, end, ore } = currentEvent;
+        let item_delete: any = {
+            start: start,
+            end: end,
+            title: `${title} ${ore} ora/e lavorate`,
+            ore: ore
+        };
+        let arr = [...events]; // copia array
+        debugger
+        let index = arr.indexOf(item_delete);
+        if (index === -1) {
+            arr.splice(index, 1);
+            setEvents(arr);
+        }
 
-        if (event === "") {
+        setOpen(false);
+
+        setCurrentEvent(initialEvent);
+
+    }
+
+    //Creazione evento (save)
+    const saveEvent = (currentEvent: any, setCurrentEvent: any) => {
+        let arr: any = [...events];
+        let obj: any = {};
+        const { start, end, title, ore, slots } = currentEvent;
+
+        if (title === "") {
             alert("Inserire la commessa");
             return;
         }
@@ -98,24 +142,39 @@ export const useBigCalendar = () => {
             alert("Inserire le ore lavorate");
             return;
         }
-        let obj = {
-            start: info,
-            end: info,
-            title: `${event} ${ore} ora/e lavorate`,
-        };
-        let arr: any = [...events, obj];
+        if (slots.length > 2) {
+            for (let i in slots) {
+
+                obj = {
+                    start: slots[i],
+                    end: slots[i],
+                    title: `${title} ${ore} ora/e lavorate`,
+                    ore: ore
+                };
+                arr.push(obj);
+            }
+        } else {
+            obj = {
+                start: start,
+                end: end,
+                title: `${title} ${ore} ora/e lavorate`,
+                ore: ore
+            };
+            arr.push(obj)
+        }
 
         setEvents(arr);
+
         setOpen(false);
 
         setCurrentEvent(initialEvent);
     };
 
     //Modifica evento (edit)
-    const editEvent = () => {
-        const { event, ore } = currentEvent;
+    const editEvent = (currentEvent: any, setCurrentEvent: any) => {
+        const { title, ore } = currentEvent;
 
-        if (event === "") {
+        if (title === "") {
             alert("Inserire la commessa");
             return;
         }
@@ -124,10 +183,12 @@ export const useBigCalendar = () => {
             return;
         }
         let obj: any = {
-            start: currentEvent.info,
-            end: currentEvent.info,
-            title: `${event} ${ore} ora/e lavorate`,
+            start: currentEvent.start,
+            end: currentEvent.end,
+            title: `${title} ${ore} ora/e lavorate`,
+            ore: ore
         };
+        debugger
         let idx = events.indexOf(obj);
 
         const nextEvents = [...events];
@@ -148,10 +209,10 @@ export const useBigCalendar = () => {
         onSelectSlot,
         open,
         setOpen,
-        currentEvent,
-        setCurrentEvent,
         onEditEvent,
         isNew,
         editEvent,
+        onDeleteEvent,
+        resizeEvent
     };
 };

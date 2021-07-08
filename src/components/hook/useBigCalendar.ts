@@ -79,7 +79,7 @@ export const useBigCalendar = () => {
 
         //sostituire title con id quando ci sarà il db
         const nextEvents = events.map(existingEvent => {
-            return existingEvent.title == event.event.title
+            return existingEvent.title === event.event.title
                 ? { ...existingEvent, start, end }
                 : existingEvent;
         });

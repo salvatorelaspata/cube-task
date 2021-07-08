@@ -1,6 +1,6 @@
 import { Fab, Grid, Paper, Switch } from "@material-ui/core";
 import clsx from "clsx";
-import React, { useMemo } from "react";
+import React from "react";
 import { useStyles } from "../components/hook/useStyles";
 import StandardContainer from "../components/layout/StandardContainer";
 import AddIcon from "@material-ui/icons/Add";
@@ -57,7 +57,7 @@ const ToDo: React.FC = () => {
             editToDo={(obj: ToDoProp) => editToDo(obj)}
         />
     );
-    const addToDo = useMemo(() => dialog, [dialog]);
+    //const addToDo = useMemo(() => dialog, [dialog]);
 
     return (
         <StandardContainer>
@@ -169,7 +169,7 @@ const ToDo: React.FC = () => {
                 <AddIcon />
             </Fab>
 
-            {open && addToDo}
+            {open && dialog}
         </StandardContainer>
     );
 };

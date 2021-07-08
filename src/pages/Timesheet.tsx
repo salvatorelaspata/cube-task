@@ -18,7 +18,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 const Timesheet: React.FC = () => {
     const [defaultDate, setDefaultDate] = useState<Date>(moment().toDate());
     const [view, setView] = useState<View>("month");
-    const [action, setAction] = useState<NavigateAction>("TODAY");
+    //const [action, setAction] = useState<NavigateAction>("TODAY");
 
 
     const onCalendarNavigate = (
@@ -28,7 +28,7 @@ const Timesheet: React.FC = () => {
     ) => {
         setDefaultDate(newDate);
         setView(view);
-        setAction(action);
+        //setAction(action);
     };
 
     const {
